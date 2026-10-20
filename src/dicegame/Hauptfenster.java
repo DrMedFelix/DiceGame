@@ -12,11 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-/**
- * Praesentationsschicht (GUI): Textfeld fuer den Namen, Knoepfe zum Speichern
- * und Suchen und ein Feedback-Bereich. Verarbeitet wird hier nichts - alles
- * laeuft ueber die UserVerwaltung.
- */
+
 public class Hauptfenster extends JFrame {
 
     private static final Color GRUEN = new Color(0, 130, 0);
@@ -35,7 +31,6 @@ public class Hauptfenster extends JFrame {
     }
 
     private void baueOberflaeche() {
-        // Oben: Beschriftung, Textfeld und die beiden Knoepfe nebeneinander
         JPanel knoepfe = new JPanel(new GridLayout(1, 2, 10, 0));
         knoepfe.add(speichernButton);
         knoepfe.add(suchenButton);
@@ -45,7 +40,6 @@ public class Hauptfenster extends JFrame {
         oben.add(nameFeld);
         oben.add(knoepfe);
 
-        // Mitte: Feedback (auch mehrzeilig, fuer das gefundene User-Objekt)
         feedbackLabel.setPreferredSize(new Dimension(300, 150));
 
         JPanel inhalt = new JPanel(new BorderLayout(0, 10));
@@ -54,14 +48,13 @@ public class Hauptfenster extends JFrame {
         inhalt.add(feedbackLabel, BorderLayout.CENTER);
         setContentPane(inhalt);
 
-        // Klick auf einen Knopf ruft die passende Methode auf
         speichernButton.addActionListener(e -> userSpeichern());
         suchenButton.addActionListener(e -> userSuchen());
-        getRootPane().setDefaultButton(speichernButton); // Enter = speichern
+        getRootPane().setDefaultButton(speichernButton); 
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
-        setLocationRelativeTo(null); // Fenster in die Bildschirmmitte
+        setLocationRelativeTo(null); 
     }
 
     private void userSpeichern() {
@@ -72,14 +65,12 @@ public class Hauptfenster extends JFrame {
             return;
         }
 
-        // Gibt es den Namen schon? Dann nur begruessen.
         User vorhanden = verwaltung.sucheUser(name);
         if (vorhanden != null) {
             zeigeErfolg("Willkommen, " + vorhanden.getName() + "!");
             return;
         }
 
-        // Sonst neu anlegen
         User neu = verwaltung.neuerUser(name, 0);
         if (neu != null) {
             zeigeErfolg("Name gespeichert: " + neu.getName());
@@ -90,7 +81,6 @@ public class Hauptfenster extends JFrame {
         }
     }
 
-    // Sucht den User mit dem eingegebenen Namen und zeigt das User-Objekt an
     private void userSuchen() {
         String name = nameFeld.getText().trim();
 
@@ -115,7 +105,6 @@ public class Hauptfenster extends JFrame {
         }
     }
 
-    // Sekunden als "1 h 05 min 09 s" darstellen
     private String formatSpielzeit(int sekunden) {
         int h = sekunden / 3600;
         int min = (sekunden % 3600) / 60;
@@ -123,12 +112,10 @@ public class Hauptfenster extends JFrame {
         return h + " h " + String.format("%02d", min) + " min " + String.format("%02d", s) + " s";
     }
 
-    // Winstreak mit Vorzeichen: +3 (Siege in Folge), -2 (Niederlagen in Folge), 0
     private String formatStreak(int streak) {
         return streak > 0 ? "+" + streak : String.valueOf(streak);
     }
 
-    // Verhindert, dass Zeichen wie < im Namen als HTML gedeutet werden
     private String htmlSicher(String text) {
         return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }

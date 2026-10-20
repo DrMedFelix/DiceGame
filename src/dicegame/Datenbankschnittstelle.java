@@ -4,17 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Datenhaltungsschicht: speichert und liest Daten auf Anweisung der
- * Logikebene (UserVerwaltung). Logische Zusammenhaenge kennt diese Klasse
- * NICHT. Sie ist ein Singleton.
- */
 public class Datenbankschnittstelle {
 
     private static final String TREIBERNAME = "org.hsqldb.jdbc.JDBCDriver";
     private static final String DB_URL = "jdbc:hsqldb:file:data/DiceGameDB";
 
-    // Spalten, die erst spaeter dazugekommen sind
     private static final String[] NEUE_SPALTEN = {
         "spielzeit", "gewonnene_runden", "verlorene_runden", "winstreak"
     };
@@ -37,8 +31,6 @@ public class Datenbankschnittstelle {
         }
     }
 
-    // Oeffnet die Datenbank, legt die Tabelle an und ergaenzt fehlende Spalten
-    // (falls die Tabelle noch aus einer aelteren Version stammt).
     private void connect() throws SQLException {
         conn = DriverManager.getConnection(DB_URL, "SA", "");
         try (Statement stmt = conn.createStatement()) {
@@ -56,14 +48,13 @@ public class Datenbankschnittstelle {
             }
         } catch (SQLException exc) {
             try {
-                close(); // sonst bleibt die Datenbank gesperrt
+                close(); 
             } catch (SQLException ignoriert) {
             }
             throw exc;
         }
     }
 
-    // Schliesst die Datenbank sauber, damit alles gespeichert ist.
     private void close() throws SQLException {
         if (conn != null && !conn.isClosed()) {
             try (Statement stmt = conn.createStatement()) {
@@ -84,7 +75,6 @@ public class Datenbankschnittstelle {
                 rst.getInt("winstreak"));
     }
 
-    // Liefert alle User (leere Liste, wenn die Tabelle leer ist).
     public List<User> alleUser() throws SQLException {
         List<User> alle = new ArrayList<>();
         connect();
@@ -99,7 +89,6 @@ public class Datenbankschnittstelle {
         return alle;
     }
 
-    // Liefert den User mit diesem Namen oder null.
     public User sucheUserNachName(String name) throws SQLException {
         User user = null;
         connect();
@@ -117,7 +106,6 @@ public class Datenbankschnittstelle {
         return user;
     }
 
-    // Legt eine neue User-Entitaet an und schreibt die erzeugte id ins Objekt.
     public boolean neuerUser(User user) throws SQLException {
         boolean result = false;
         connect();
@@ -144,7 +132,6 @@ public class Datenbankschnittstelle {
         return result;
     }
 
-    // Aktualisiert die User-Entitaet, deren id im Objekt steht.
     public boolean speichereUser(User user) throws SQLException {
         boolean result;
         connect();
@@ -165,7 +152,6 @@ public class Datenbankschnittstelle {
         return result;
     }
 
-    // Loescht die User-Entitaet, deren id im Objekt steht.
     public boolean loescheUser(User user) throws SQLException {
         boolean result;
         connect();
