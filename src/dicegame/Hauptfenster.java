@@ -12,11 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-/**
- * Praesentationsschicht (GUI): Textfeld fuer den Namen, Knoepfe zum Speichern
- * und Suchen und ein Feedback-Bereich. Verarbeitet wird hier nichts - alles
- * laeuft ueber die UserVerwaltung.
- */
 public class Hauptfenster extends JFrame {
 
     private static final Color GRUEN = new Color(0, 130, 0);
@@ -71,15 +66,14 @@ public class Hauptfenster extends JFrame {
             zeigeFehler("Bitte einen Namen eingeben!");
             return;
         }
-
-        // Gibt es den Namen schon? Dann nur begruessen.
+        
         User vorhanden = verwaltung.sucheUser(name);
         if (vorhanden != null) {
             zeigeErfolg("Willkommen, " + vorhanden.getName() + "!");
             return;
         }
 
-        // Sonst neu anlegen
+        
         User neu = verwaltung.neuerUser(name, 0);
         if (neu != null) {
             zeigeErfolg("Name gespeichert: " + neu.getName());
@@ -102,7 +96,7 @@ public class Hauptfenster extends JFrame {
         User gefunden = verwaltung.sucheUser(name);
         if (gefunden != null) {
             zeigeErfolg("<html><center>Gefunden:<br>"
-                    + "Name: " + htmlSicher(gefunden.getName()) + "<br>"
+                    + "Name: " + gefunden.getName() + "<br>"
                     + "ID: " + gefunden.getId() + "<br>"
                     + "W\u00e4hrung: " + gefunden.getWaehrung() + "<br>"
                     + "Spielzeit: " + formatSpielzeit(gefunden.getSpielzeit()) + "<br>"
@@ -115,7 +109,7 @@ public class Hauptfenster extends JFrame {
         }
     }
 
-    // Sekunden als "1 h 05 min 09 s" darstellen
+    
     private String formatSpielzeit(int sekunden) {
         int h = sekunden / 3600;
         int min = (sekunden % 3600) / 60;
@@ -123,14 +117,9 @@ public class Hauptfenster extends JFrame {
         return h + " h " + String.format("%02d", min) + " min " + String.format("%02d", s) + " s";
     }
 
-    // Winstreak mit Vorzeichen: +3 (Siege in Folge), -2 (Niederlagen in Folge), 0
+    // Winstreak mit Vorzeichen: +3 (Siege in Folge), -2 (Niederlagen in Folge)
     private String formatStreak(int streak) {
         return streak > 0 ? "+" + streak : String.valueOf(streak);
-    }
-
-    // Verhindert, dass Zeichen wie < im Namen als HTML gedeutet werden
-    private String htmlSicher(String text) {
-        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     private void zeigeErfolg(String text) {
