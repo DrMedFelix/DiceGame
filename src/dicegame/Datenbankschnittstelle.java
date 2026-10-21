@@ -9,7 +9,6 @@ public class Datenbankschnittstelle {
     private static final String TREIBERNAME = "org.hsqldb.jdbc.JDBCDriver";
     private static final String DB_URL = "jdbc:hsqldb:file:data/DiceGameDB";
 
-    // Spalten, die erst spaeter dazugekommen sind
     private static final String[] NEUE_SPALTEN = {
         "spielzeit", "gewonnene_runden", "verlorene_runden", "winstreak"
     };
@@ -49,7 +48,7 @@ public class Datenbankschnittstelle {
             }
         } catch (SQLException exc) {
             try {
-                close(); // sonst bleibt die Datenbank gesperrt
+                close(); 
             } catch (SQLException ignoriert) {
             }
             throw exc;

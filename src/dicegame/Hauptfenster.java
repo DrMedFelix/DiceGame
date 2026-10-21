@@ -30,7 +30,6 @@ public class Hauptfenster extends JFrame {
     }
 
     private void baueOberflaeche() {
-        // Oben: Beschriftung, Textfeld und die beiden Knoepfe nebeneinander
         JPanel knoepfe = new JPanel(new GridLayout(1, 2, 10, 0));
         knoepfe.add(speichernButton);
         knoepfe.add(suchenButton);
@@ -40,7 +39,6 @@ public class Hauptfenster extends JFrame {
         oben.add(nameFeld);
         oben.add(knoepfe);
 
-        // Mitte: Feedback (auch mehrzeilig, fuer das gefundene User-Objekt)
         feedbackLabel.setPreferredSize(new Dimension(300, 150));
 
         JPanel inhalt = new JPanel(new BorderLayout(0, 10));
@@ -49,14 +47,13 @@ public class Hauptfenster extends JFrame {
         inhalt.add(feedbackLabel, BorderLayout.CENTER);
         setContentPane(inhalt);
 
-        // Klick auf einen Knopf ruft die passende Methode auf
         speichernButton.addActionListener(e -> userSpeichern());
         suchenButton.addActionListener(e -> userSuchen());
-        getRootPane().setDefaultButton(speichernButton); // Enter = speichern
+        getRootPane().setDefaultButton(speichernButton); 
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
-        setLocationRelativeTo(null); // Fenster in die Bildschirmmitte
+        setLocationRelativeTo(null); 
     }
 
     private void userSpeichern() {
@@ -73,7 +70,6 @@ public class Hauptfenster extends JFrame {
             return;
         }
 
-        
         User neu = verwaltung.neuerUser(name, 0);
         if (neu != null) {
             zeigeErfolg("Name gespeichert: " + neu.getName());
@@ -84,7 +80,6 @@ public class Hauptfenster extends JFrame {
         }
     }
 
-    // Sucht den User mit dem eingegebenen Namen und zeigt das User-Objekt an
     private void userSuchen() {
         String name = nameFeld.getText().trim();
 
@@ -109,7 +104,6 @@ public class Hauptfenster extends JFrame {
         }
     }
 
-    
     private String formatSpielzeit(int sekunden) {
         int h = sekunden / 3600;
         int min = (sekunden % 3600) / 60;
@@ -118,8 +112,14 @@ public class Hauptfenster extends JFrame {
     }
 
     // Winstreak mit Vorzeichen: +3 (Siege in Folge), -2 (Niederlagen in Folge)
+
     private String formatStreak(int streak) {
         return streak > 0 ? "+" + streak : String.valueOf(streak);
+    }
+
+
+    private String htmlSicher(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     private void zeigeErfolg(String text) {
