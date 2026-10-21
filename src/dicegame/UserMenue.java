@@ -14,130 +14,66 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author kracc
  */
 public class UserMenue extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UserMenue.class.getName());
-private static final Color GRUEN = new Color(0, 130, 0);
-    private static final Color ROT = new Color(190, 0, 0);
+    private static final java.util.logging.Logger logger = 
+    java.util.logging.Logger.getLogger(UserMenue.class.getName());
 
     private final UserVerwaltung verwaltung = UserVerwaltung.getInstance();
 
-    private final JTextField nameFeld = new JTextField(20);
-    private final JButton speichernButton = new JButton("Starten");
-    private final JButton suchenButton = new JButton("Suche nach");
-    private final JLabel feedbackLabel = new JLabel(" ", SwingConstants.CENTER);
+    
     /**
      * Creates new form UserMenue
      */
     public UserMenue() {
         super("DiceGame");
         initComponents();
-        baueOberflaeche();
-    }
-
-    private void baueOberflaeche() {
-        JPanel knoepfe = new JPanel(new GridLayout(1, 2, 10, 0));
-        knoepfe.add(speichernButton);
-        knoepfe.add(suchenButton);
-
-        JPanel oben = new JPanel(new GridLayout(3, 1, 0, 10));
-        oben.add(new JLabel("Benutzername:"));
-        oben.add(nameFeld);
-        oben.add(knoepfe);
-
-        feedbackLabel.setPreferredSize(new Dimension(300, 150));
-
-        JPanel inhalt = new JPanel(new BorderLayout(0, 10));
-        inhalt.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        inhalt.add(oben, BorderLayout.NORTH);
-        inhalt.add(feedbackLabel, BorderLayout.CENTER);
-        setContentPane(inhalt);
-
-        speichernButton.addActionListener(e -> userSpeichern());
-        suchenButton.addActionListener(e -> userSuchen());
-        getRootPane().setDefaultButton(speichernButton); 
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null); 
+        initCustomCode();
     }
     
-    private void userSpeichern() {
-        String name = nameFeld.getText().trim();
+    private void initCustomCode() {
+        setLocationRelativeTo(null);
+        getRootPane().setDefaultButton(jButton1);
+        ladeUserInComboBox();
+    }
+    
+    private void ladeUserInComboBox() {
+        List<User> alleUser = verwaltung.alleUser();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 
-        if (name.isEmpty()) {
-            zeigeFehler("Bitte einen Namen eingeben!");
-            return;
-        }
-
-        User vorhanden = verwaltung.sucheUser(name);
-        if (vorhanden != null) {
-            zeigeErfolg("Willkommen, " + vorhanden.getName() + "!");
-            return;
-        }
-
-        User neu = verwaltung.neuerUser(name, 0);
-        if (neu != null) {
-            zeigeErfolg("Name gespeichert: " + neu.getName());
-        } else if (name.length() > UserVerwaltung.MAX_NAME_LAENGE) {
-            zeigeFehler("Der Name ist zu lang (max. " + UserVerwaltung.MAX_NAME_LAENGE + " Zeichen)!");
+        if (alleUser != null && !alleUser.isEmpty()) {
+            for (User u : alleUser) {
+                model.addElement(u.getName());
+            }
         } else {
-            zeigeFehler("Der Name konnte nicht gespeichert werden!");
-        }
-    }
-
-    private void userSuchen() {
-        String name = nameFeld.getText().trim();
-
-        if (name.isEmpty()) {
-            zeigeFehler("Bitte einen Namen eingeben!");
-            return;
+            model.addElement("-- Keine Spieler vorhanden --");
         }
 
-        User gefunden = verwaltung.sucheUser(name);
-        if (gefunden != null) {
-            zeigeErfolg("<html><center>Gefunden:<br>"
-                    + "Name: " + htmlSicher(gefunden.getName()) + "<br>"
-                    + "ID: " + gefunden.getId() + "<br>"
-                    + "W\u00e4hrung: " + gefunden.getWaehrung() + "<br>"
-                    + "Spielzeit: " + formatSpielzeit(gefunden.getSpielzeit()) + "<br>"
-                    + "Runden: " + gefunden.getGewonneneRunden() + " gewonnen, "
-                    + gefunden.getVerloreneRunden() + " verloren<br>"
-                    + "Winstreak: " + formatStreak(gefunden.getWinstreak())
-                    + "</center></html>");
-        } else {
-            zeigeFehler("Kein User mit dem Namen '" + name + "' gefunden!");
-        }
+        jComboBox1.setModel(model);
     }
-
-    private String formatSpielzeit(int sekunden) {
-        int h = sekunden / 3600;
-        int min = (sekunden % 3600) / 60;
-        int s = sekunden % 60;
-        return h + " h " + String.format("%02d", min) + " min " + String.format("%02d", s) + " s";
-    }
-
-    private String formatStreak(int streak) {
-        return streak > 0 ? "+" + streak : String.valueOf(streak);
-    }
-
+    
     private String htmlSicher(String text) {
+        if (text == null) return "";
         return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
-    private void zeigeErfolg(String text) {
-        feedbackLabel.setForeground(GRUEN);
-        feedbackLabel.setText(text);
+    private void zeigeErfolg(String message) {
+        JOptionPane.showMessageDialog(this, message, "Erfolg", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void zeigeFehler(String text) {
-        feedbackLabel.setForeground(ROT);
-        feedbackLabel.setText(text);
+    private void zeigeFehler(String message) {
+        JOptionPane.showMessageDialog(this, message, "Fehler", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void zeigeHinweis(String message) {
+        JOptionPane.showMessageDialog(this, message, "Hinweis", JOptionPane.WARNING_MESSAGE);
     }
     
     /**
@@ -149,21 +85,141 @@ private static final Color GRUEN = new Color(0, 130, 0);
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jButton2 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setText("Neuer Spielername:");
+
+        jButton1.setText("Hinzufügen");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        jButton2.setText("Spiel starten");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel2.setText("Bestehenden Spieler auswählen:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(86, 86, 86)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton1))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(77, 77, 77)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    String name = jTextField1.getText().trim();
+
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Bitte gib einen Namen ein!", 
+                "Fehler", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (verwaltung.userExistiert(name)) {
+            JOptionPane.showMessageDialog(this, 
+                "Ein Spieler mit diesem Namen existiert bereits!", 
+                "Hinweis", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        User neu = verwaltung.neuerUser(name, 0);
+        if (neu != null) {
+            JOptionPane.showMessageDialog(this, 
+                "Spieler '" + neu.getName() + "' erfolgreich angelegt!", 
+                "Erfolg", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            jTextField1.setText("");
+            ladeUserInComboBox();
+            jComboBox1.setSelectedItem(neu.getName());
+        } else if (name.length() > UserVerwaltung.MAX_NAME_LAENGE) {
+            JOptionPane.showMessageDialog(this, 
+                "Der Name ist zu lang (max. " + UserVerwaltung.MAX_NAME_LAENGE + " Zeichen)!", 
+                "Fehler", 
+                JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Fehler beim Speichern des Spielers!", 
+                "Fehler", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    String ausgewaehlterName = (String) jComboBox1.getSelectedItem();
+
+        if (ausgewaehlterName == null || ausgewaehlterName.equals("-- Keine Spieler vorhanden --")) {
+            JOptionPane.showMessageDialog(this, 
+                "Bitte wähle einen gültigen Spieler aus oder erstelle einen neuen!", 
+                "Fehler", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        User spieler = verwaltung.sucheUser(ausgewaehlterName);
+
+        if (spieler != null) {        
+            JOptionPane.showMessageDialog(this, 
+                "Spiel wird gestartet für: " + spieler.getName(), 
+                "Start", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+    HauptMenue o = new HauptMenue();
+    o.setVisible(true);
+    this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        ladeUserInComboBox();
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -191,5 +247,11 @@ private static final Color GRUEN = new Color(0, 130, 0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

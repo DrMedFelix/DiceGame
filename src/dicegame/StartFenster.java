@@ -31,7 +31,7 @@ public class StartFenster extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        DiceGame = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -39,8 +39,7 @@ public class StartFenster extends javax.swing.JFrame {
         jButton1.setText("Spiel starten");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
-        DiceGame.setEditable(false);
-        DiceGame.setText("   DiceGame");
+        jLabel1.setText("DiceGame");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -48,17 +47,19 @@ public class StartFenster extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(144, 144, 144)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addComponent(DiceGame, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jButton1)
                 .addContainerGap(160, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(135, 135, 135))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(95, 95, 95)
-                .addComponent(DiceGame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(92, 92, 92)
+                .addComponent(jLabel1)
+                .addGap(27, 27, 27)
                 .addComponent(jButton1)
                 .addContainerGap(142, Short.MAX_VALUE))
         );
@@ -67,17 +68,14 @@ public class StartFenster extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    // Neuzuweisung und Öffnen von Fenster2
     UserMenue u = new UserMenue();
     u.setVisible(true);
-    // Optional: Aktuelles Fenster schließen/ausblenden
-    this.dispose(); // Schließt das aktuelle Fenster vollständig
+    this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 public StartFenster(User v) {
         initComponents();
+        setLocationRelativeTo(null);
 this.v = v;
-// Eintragung der Werte aus dem Objekt in die grafische Oberfläche
-        DiceGame.setText(""+v.getR());
     }
     /**
      * @param args the command line arguments
@@ -105,7 +103,7 @@ this.v = v;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField DiceGame;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
