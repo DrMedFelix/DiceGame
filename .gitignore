@@ -1,3 +1,6 @@
 /nbproject/private/
 /build/
 /dist/
+data/DiceGameDB.*
+build/
+dist/
