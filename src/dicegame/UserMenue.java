@@ -22,41 +22,52 @@ import javax.swing.JOptionPane;
  *
  * @author kracc
  */
-public class UserMenue extends javax.swing.JFrame {
+public class UserMenue extends javax.swing.JInternalFrame {
     private static final java.util.logging.Logger logger = 
     java.util.logging.Logger.getLogger(UserMenue.class.getName());
 
     private final UserVerwaltung verwaltung = UserVerwaltung.getInstance();
-
+// Das gehört in die Klasse UserMenue.java:
     
     /**
      * Creates new form UserMenue
      */
-    public UserMenue() {
-        super("DiceGame");
+    
+    
+    private HauptHintergrundFenster hauptFenster;
+    public UserMenue(HauptHintergrundFenster hauptFenster) {
         initComponents();
+        this.hauptFenster = hauptFenster;
+        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+        this.setBorder(null);
+        this.getContentPane().setBackground(java.awt.Color.WHITE);
         initCustomCode();
+        this.setResizable(true);
+        this.setMaximizable(true);
     }
     
     private void initCustomCode() {
-        setLocationRelativeTo(null);
         getRootPane().setDefaultButton(jButton1);
         ladeUserInComboBox();
     }
     
     private void ladeUserInComboBox() {
-        List<User> alleUser = verwaltung.alleUser();
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        if (this.jComboBox1 == null) {
+        this.jComboBox1 = new javax.swing.JComboBox<>();
+    }
 
-        if (alleUser != null && !alleUser.isEmpty()) {
-            for (User u : alleUser) {
-                model.addElement(u.getName());
-            }
-        } else {
-            model.addElement("-- Keine Spieler vorhanden --");
+    List<User> alleUser = verwaltung.alleUser();
+    DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+    if (alleUser != null && !alleUser.isEmpty()) {
+        for (User u : alleUser) {
+            model.addElement(u.getName());
         }
+    } else {
+        model.addElement("-- Keine Spieler vorhanden --");
+    }
 
-        jComboBox1.setModel(model);
+    jComboBox1.setModel(model);
     }
     
     private String htmlSicher(String text) {
@@ -92,12 +103,10 @@ public class UserMenue extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
+        setBorder(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMaximizable(true);
+        setResizable(true);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("Neuer Spielername:");
@@ -127,7 +136,7 @@ public class UserMenue extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton1))
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,7 +153,7 @@ public class UserMenue extends javax.swing.JFrame {
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
         pack();
@@ -212,39 +221,15 @@ public class UserMenue extends javax.swing.JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
         }
         
-    HauptMenue o = new HauptMenue();
-    o.setVisible(true);
-    this.dispose();
+    HauptMenue naechstesFenster = new HauptMenue(hauptFenster); 
+    if (hauptFenster != null) {
+        hauptFenster.zeigeNaechstesFenster(this, naechstesFenster);
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        ladeUserInComboBox();
-    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new UserMenue().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

@@ -5,8 +5,9 @@ import javax.swing.SwingUtilities;
 public class DiceGame {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Hauptfenster().setVisible(true));
-
-        // Zum Testen im Terminal stattdessen: new Hauptmenue().starten();
-    }
+    java.awt.EventQueue.invokeLater(() -> {
+        HauptHintergrundFenster mainFrame = new HauptHintergrundFenster();
+        mainFrame.setVisible(true);
+    });
+}
 }
