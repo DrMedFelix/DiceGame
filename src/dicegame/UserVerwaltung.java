@@ -1,3 +1,4 @@
+
 package dicegame;
 
 import java.sql.SQLException;
@@ -20,13 +21,12 @@ public class UserVerwaltung {
     }
 
     public List<User> alleUser() {
-        List<User> alle = null;
         try {
-            alle = Datenbankschnittstelle.getInstance().alleUser();
+            return Datenbankschnittstelle.getInstance().alleUser();
         } catch (SQLException exc) {
             exc.printStackTrace();
+            return null;
         }
-        return alle;
     }
 
     public boolean istLeer() {
@@ -35,13 +35,13 @@ public class UserVerwaltung {
     }
 
     public User sucheUser(String name) {
-        User user = null;
         try {
-            user = Datenbankschnittstelle.getInstance().sucheUserNachName(name);
+            return Datenbankschnittstelle.getInstance()
+                    .sucheUserNachName(name);
         } catch (SQLException exc) {
             exc.printStackTrace();
+            return null;
         }
-        return user;
     }
 
     public boolean userExistiert(String name) {
@@ -50,48 +50,69 @@ public class UserVerwaltung {
 
 
     public User neuerUser(String name, int waehrung) {
-        User user = null;
-        if (name == null || name.trim().isEmpty() || name.length() > MAX_NAME_LAENGE || waehrung < 0) {
+        if (name == null || name.trim().isEmpty()
+                || name.length() > MAX_NAME_LAENGE || waehrung < 0) {
             return null;
         }
+
         try {
-            if (Datenbankschnittstelle.getInstance().sucheUserNachName(name) == null) {
-                user = new User(name, waehrung);
-                if (!Datenbankschnittstelle.getInstance().neuerUser(user)) {
-                    user = null;
-                }
+            Datenbankschnittstelle db =
+                    Datenbankschnittstelle.getInstance();
+
+            if (db.sucheUserNachName(name) != null) {
+                return null;
             }
+
+            User user = new User(name, waehrung);
+
+            if (db.neuerUser(user)) {
+                return user;
+            }
+
         } catch (SQLException exc) {
             exc.printStackTrace();
         }
-        return user;
+
+        return null;
     }
 
     public boolean userAendern(User user, String name, int waehrung) {
-        boolean result = false;
-        if (name == null || name.trim().isEmpty() || name.length() > MAX_NAME_LAENGE || waehrung < 0) {
+        if (user == null || name == null || name.trim().isEmpty()
+                || name.length() > MAX_NAME_LAENGE || waehrung < 0) {
             return false;
         }
+
         try {
-            Datenbankschnittstelle db = Datenbankschnittstelle.getInstance();
-            if (name.equals(user.getName()) || db.sucheUserNachName(name) == null) {
+            Datenbankschnittstelle db =
+                    Datenbankschnittstelle.getInstance();
+
+            if (name.equals(user.getName())
+                    || db.sucheUserNachName(name) == null) {
+
                 user.setName(name);
                 user.setWaehrung(waehrung);
-                result = db.speichereUser(user);
+
+                return db.speichereUser(user);
             }
+
         } catch (SQLException exc) {
             exc.printStackTrace();
         }
-        return result;
+
+        return false;
     }
 
     public boolean userLoeschen(User user) {
-        boolean result = false;
+        if (user == null) {
+            return false;
+        }
+
         try {
-            result = Datenbankschnittstelle.getInstance().loescheUser(user);
+            return Datenbankschnittstelle.getInstance()
+                    .loescheUser(user);
         } catch (SQLException exc) {
             exc.printStackTrace();
+            return false;
         }
-        return result;
     }
 }

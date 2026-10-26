@@ -64,7 +64,7 @@ public class Hauptfenster extends JFrame {
             zeigeFehler("Bitte einen Namen eingeben!");
             return;
         }
-
+        
         User vorhanden = verwaltung.sucheUser(name);
         if (vorhanden != null) {
             zeigeErfolg("Willkommen, " + vorhanden.getName() + "!");
@@ -92,7 +92,7 @@ public class Hauptfenster extends JFrame {
         User gefunden = verwaltung.sucheUser(name);
         if (gefunden != null) {
             zeigeErfolg("<html><center>Gefunden:<br>"
-                    + "Name: " + htmlSicher(gefunden.getName()) + "<br>"
+                    + "Name: " + gefunden.getName() + "<br>"
                     + "ID: " + gefunden.getId() + "<br>"
                     + "W\u00e4hrung: " + gefunden.getWaehrung() + "<br>"
                     + "Spielzeit: " + formatSpielzeit(gefunden.getSpielzeit()) + "<br>"
@@ -116,9 +116,6 @@ public class Hauptfenster extends JFrame {
         return streak > 0 ? "+" + streak : String.valueOf(streak);
     }
 
-    private String htmlSicher(String text) {
-        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-    }
 
     private void zeigeErfolg(String text) {
         feedbackLabel.setForeground(GRUEN);

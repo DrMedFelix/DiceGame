@@ -1,34 +1,44 @@
 package dicegame;
 
-public class User {
+/**
+ * Fachklasse: Container fuer alle Daten eines Users.
+ * Wird in der Tabelle Spieler gespeichert.
+ */
+public class User extends Spieler {
 
     private static final int NO_ID = -1;
 
     private int id;
     private String name;
     private int waehrung;
-    private int spielzeit;        
+    private int spielzeit;
     private int gewonneneRunden;
     private int verloreneRunden;
-    private int winstreak;        
+    private int winstreak;
 
+    // Neuer User ohne Name und Waehrung
     public User() {
-        id = NO_ID;
+        super();
+        this.id = NO_ID;
     }
 
+    // Neuer User mit Name und Waehrung
     public User(String name, int waehrung) {
-        this();
+        super();
+        this.id = NO_ID;
         this.name = name;
         this.waehrung = waehrung;
     }
 
+    // Bereits gespeicherter User
     public User(int id, String name, int waehrung) {
         this(name, waehrung);
         this.id = id;
     }
 
+    // Bereits gespeicherter User mit allen Statistikwerten
     public User(int id, String name, int waehrung, int spielzeit,
-            int gewonneneRunden, int verloreneRunden, int winstreak) {
+                int gewonneneRunden, int verloreneRunden, int winstreak) {
         this(id, name, waehrung);
         this.spielzeit = spielzeit;
         this.gewonneneRunden = gewonneneRunden;
@@ -103,7 +113,7 @@ public class User {
     }
 
     public boolean kannBezahlen(int betrag) {
-        return waehrung >= betrag;
+        return betrag >= 0 && waehrung >= betrag;
     }
 
     @Override
@@ -113,11 +123,5 @@ public class User {
                 + ", gewonnen=" + gewonneneRunden
                 + ", verloren=" + verloreneRunden
                 + ", Winstreak=" + winstreak + ")";
-    }
-    
-    private double r; 
-
-    public double getR() {
-        return this.r;
     }
 }
