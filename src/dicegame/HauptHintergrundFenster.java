@@ -44,10 +44,8 @@ public class HauptHintergrundFenster extends javax.swing.JFrame {
  }
 
     private void zentrieren(JInternalFrame frame) {
-        // Stellt sicher, dass das Fenster seine im Designer festgelegte Wunschgröße annimmt
         frame.pack(); 
         
-        // Berechnung der Bildschirmmitte (verzögert, damit die Maße korrekt geladen sind)
         javax.swing.SwingUtilities.invokeLater(() -> {
             int desktopBreite = jDesktopPane1.getWidth();
             int desktopHoehe = jDesktopPane1.getHeight();
@@ -57,13 +55,9 @@ public class HauptHintergrundFenster extends javax.swing.JFrame {
             int x = (desktopBreite - fensterBreite) / 2;
             int y = (desktopHoehe - fensterHoehe) / 2;
 
-            // Verhindern, dass es aus dem Bild rutscht
             frame.setLocation(Math.max(0, x), Math.max(0, y));
         });
     }
-
-    // Sofortiger Versuch beim Aufruf
-
 
     /**
      * This method is called from within the constructor to initialize the form.
