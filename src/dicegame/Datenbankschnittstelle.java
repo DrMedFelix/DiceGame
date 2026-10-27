@@ -88,6 +88,30 @@ public class Datenbankschnittstelle {
         }
         return alle;
     }
+    
+    private Wuerfel wuerfelAusZeile(ResultSet rstt) throws SQLException {
+        return new Wuerfel(
+                rstt.getInt(null),
+                rstt.getInt("seltenheit"),
+                rstt.getInt("preis"),
+                rstt.getString("name"),
+                rstt.getString("itemTyp"),
+                rstt.getInt("verkaufspreis"));
+    }
+    
+    public List<Wuerfel> alleWuerfel() throws SQLException {
+        List<Wuerfel> alleW = new ArrayList<>();
+        connect();
+        try (Statement stmt = conn.createStatement();
+             ResultSet rstt = stmt.executeQuery("SELECT * FROM Wuerfel ORDER BY id")) {
+            while (rstt.next()) {
+                alleW.add(wuerfelAusZeile(rstt));
+            }
+        } finally {
+            close();
+        }
+        return alleW;
+    }
 
     public User sucheUserNachName(String name) throws SQLException {
         User user = null;
@@ -132,6 +156,24 @@ public class Datenbankschnittstelle {
         return result;
     }
 
+    public boolean speichereWuerfel(Wuerfel wuerfel) throws SQLException{
+        boolean result;
+        connect();
+        try (PreparedStatement ps = conn.prepareStatement(
+                "UPDATE Wuerfel SET name = ?, seltenheit = ?, typ = ?, preis = ?, verkaufspreis = ?")) {
+            ps.setString(1, wuerfel.getName());
+            ps.setInt(2, wuerfel.getSeltenheit());
+            ps.setString(3, wuerfel.getitemTyp());
+            ps.setInt(4, wuerfel.getPreis());
+            ps.setInt(5, wuerfel.getVerkaufsPreis());
+            result = ps.executeUpdate() != 0;
+        } finally {
+            close();
+        }
+        return result;
+        
+    }
+    
     public boolean speichereUser(User user) throws SQLException {
         boolean result;
         connect();

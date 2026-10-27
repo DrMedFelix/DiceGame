@@ -24,6 +24,7 @@ public class Normalmodus extends javax.swing.JInternalFrame {
         initComponents();
         this.hauptFenster = hauptFenster;
         this.hauptFenster = hauptFenster;
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         this.setBorder(null);
     }

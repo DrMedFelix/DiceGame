@@ -45,7 +45,7 @@ public class Wuerfel {
         return itemTyp;
     }
     
-    public int verkaufsPreis(){
+    public int getVerkaufsPreis(){
         return verkaufspreis;
     }
     
