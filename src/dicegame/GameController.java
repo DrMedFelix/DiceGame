@@ -16,8 +16,10 @@ public class GameController {
     private int anzahlWuerfelSpieler2;
     private Wette aktuelleWette;
     private List<Wette> moeglicheWette;
+    private Wuerfel wuerfel;
     
     public GameController(int spielWuerfelAnzahl, int aktuelleSpielWuerfelAnzahl, int anzahlWuerfelSpieler1, int anzahlWuerfelSpieler2, Wette aktuelleWette){
+        this.wuerfel = new Wuerfel();
         this.spielWuerfelAnzahl = spielWuerfelAnzahl;
         this.aktuelleSpielWuerfelAnzahl = aktuelleSpielWuerfelAnzahl;
         this.anzahlWuerfelSpieler1 = anzahlWuerfelSpieler1;
@@ -26,12 +28,22 @@ public class GameController {
         //liste moeglicheWetten
     }
     
+    public List<Spieler> bestimmeReihenfolge(){
+        
+    }
+            
     public void bestimmeRollen(){
         
     }
     public void wuerfeln(){
-            new Wuerfel(1,1,1,"testwürfel","passiv",2);
+            wuerfel.getAugenzahl();
     }
+    
+    public List<Integer> wuerfeln(Spieler spieler){
+        //liefer mir die würfelergebnisse für die spieler
+        
+    }
+    
     public void wettBewertungsCheck(){
         
     }
