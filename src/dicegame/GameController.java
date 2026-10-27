@@ -30,7 +30,7 @@ public class GameController {
         
     }
     public void wuerfeln(){
-        
+            new Wuerfel(1,1,1,"testwürfel","passiv",2);
     }
     public void wettBewertungsCheck(){
         

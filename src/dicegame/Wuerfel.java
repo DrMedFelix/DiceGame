@@ -13,10 +13,10 @@ public class Wuerfel {
     private int seltenheit;
     private int preis;
     private String name;
-    private int itemTyp;
+    private String itemTyp;
     private int verkaufspreis;
     
-    public Wuerfel(int augenzahl, int seltenheit, int preis, String name, int itemTyp, int verkaufspreis){
+    public Wuerfel(int augenzahl, int seltenheit, int preis, String name, String itemTyp, int verkaufspreis){
         this.augenzahl = augenzahl;
         this.seltenheit = seltenheit;
         this.preis = preis;
@@ -25,5 +25,52 @@ public class Wuerfel {
         this.verkaufspreis = verkaufspreis;
     }
     
-    //getter setter
+    public int getAugenzahl(){
+        return augenzahl;
+    }
+    
+    public int getSeltenheit(){
+        return seltenheit;
+    }
+    
+    public int getPreis(){
+        return preis;
+    }
+    
+    public String getName(){
+        return name;
+    }
+    
+    public String getitemTyp(){
+        return itemTyp;
+    }
+    
+    public int verkaufsPreis(){
+        return verkaufspreis;
+    }
+    
+    public void setAugenzahl(int augenzahl){
+        this.augenzahl = augenzahl;
+    }
+    
+    public void setSeltenheit(int seltenheit){
+        this.seltenheit = seltenheit;
+    }
+    
+    public void setPreis(int preis){
+        this.preis = preis;
+    }
+    
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    public void setitemTyp(String itemTyp){
+        this.itemTyp = itemTyp;
+    }
+    
+    public void setVerkaufsPreis(int verkaufspreis){
+        this.verkaufspreis = verkaufspreis;
+    }
+    
 }
