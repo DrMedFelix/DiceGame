@@ -4,29 +4,33 @@
  */
 package dicegame;
 
+import java.util.Random;
+
 /**
  *
  * @author fregi
  */
 public class Wuerfel {
-    private int augenzahl;
+    private Random random;
+    //private int augenzahl;
     private int seltenheit;
     private int preis;
     private String name;
     private String itemTyp;
     private int verkaufspreis;
     
-    public Wuerfel(int augenzahl, int seltenheit, int preis, String name, String itemTyp, int verkaufspreis){
-        this.augenzahl = augenzahl;
-        this.seltenheit = seltenheit;
-        this.preis = preis;
-        this.name = name;
-        this.itemTyp = itemTyp;
-        this.verkaufspreis = verkaufspreis;
+    public Wuerfel(){
+        random = new Random();
+        //this.augenzahl = augenzahl;
+//        this.seltenheit = seltenheit;
+//        this.preis = preis;
+//        this.name = name;
+//        this.itemTyp = itemTyp;
+//        this.verkaufspreis = verkaufspreis;
     }
     
     public int getAugenzahl(){
-        return augenzahl;
+        return random.nextInt(5)+1;
     }
     
     public int getSeltenheit(){
@@ -49,9 +53,6 @@ public class Wuerfel {
         return verkaufspreis;
     }
     
-    public void setAugenzahl(int augenzahl){
-        this.augenzahl = augenzahl;
-    }
     
     public void setSeltenheit(int seltenheit){
         this.seltenheit = seltenheit;

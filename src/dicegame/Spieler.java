@@ -5,11 +5,14 @@ public class Spieler {
 
     private boolean rolleSpieler1;
     private boolean rolleSpieler2;
+    
 
     public Spieler() {
         this.rolleSpieler1 = false;
         this.rolleSpieler2 = false;
     }
+    
+    //liste von vorhandenen Würfeln
 
     // Rollen fuer die aktuelle Runde festlegen
     public void setRollen(boolean rolleSpieler1, boolean rolleSpieler2) {
