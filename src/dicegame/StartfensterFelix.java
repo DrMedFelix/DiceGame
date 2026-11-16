@@ -78,7 +78,9 @@ public class StartfensterFelix extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         if (hauptFenster != null) {
             hauptFenster.zeigeNaechstesFenster(this, new UserMenue(hauptFenster));
+            //System.out.println("Test");
         }
+        
     }
 
     // Variables declaration - do not modify                     

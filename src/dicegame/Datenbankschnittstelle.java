@@ -88,7 +88,7 @@ public class Datenbankschnittstelle {
         }
         return alle;
     }
-
+    
     public User sucheUserNachName(String name) throws SQLException {
         User user = null;
         connect();

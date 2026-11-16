@@ -93,6 +93,7 @@ public class StartFenster extends javax.swing.JInternalFrame {
     UserMenue u = new UserMenue(hauptFenster);
     if (hauptFenster != null) {
         hauptFenster.zeigeNaechstesFenster(this, u);
+        System.out.println("Test");
     }
     }//GEN-LAST:event_jButton1ActionPerformed
     public StartFenster(User v) {

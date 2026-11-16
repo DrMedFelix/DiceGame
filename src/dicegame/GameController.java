@@ -29,10 +29,9 @@ public class GameController {
     }
     
     public List<Spieler> bestimmeReihenfolge(){
-        List<Spieler> spielerListe = new List<>();
-        return spielerListe;
+        return null;
     }
-            
+    
     public void bestimmeRollen(){
         
     }
@@ -42,7 +41,7 @@ public class GameController {
     
     public List<Integer> wuerfeln(Spieler spieler){
         //liefer mir die würfelergebnisse für die spieler
-        
+        return null;
     }
     
     public void wettBewertungsCheck(){
