@@ -30,7 +30,7 @@ public class Wuerfel {
     }
     
     public int getAugenzahl(){
-        return random.nextInt(5)+1;
+        return random.nextInt(6)+1;
     }
     
     public int getSeltenheit(){

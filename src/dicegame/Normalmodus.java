@@ -16,18 +16,55 @@ public class Normalmodus extends javax.swing.JInternalFrame {
      * Creates new form Normalmodus
      */
     private HauptHintergrundFenster hauptFenster;
+ 
+    // Reihenfolge: Spieler, Bot 1, Bot 2, Bot 3
+    private final Spieler[] spieler = {new Spieler(), new Bot(), new Bot(), new Bot()};
+    private final javax.swing.JTextField[][] felder = new javax.swing.JTextField[4][5];
+    private GameController gameController;
+ 
     public Normalmodus() {
         initComponents();
+        starteSpiel();
     }
-    
+ 
     public Normalmodus(HauptHintergrundFenster hauptFenster) {
         initComponents();
-        this.hauptFenster = hauptFenster;
         this.hauptFenster = hauptFenster;
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         this.setBorder(null);
+        starteSpiel();
     }
+ 
+    // Textboxen anlegen, würfeln, Zahlen anzeigen
+   // Textboxen anlegen, würfeln, Zahlen anzeigen
+private void starteSpiel() {
+    javax.swing.JPanel[] panels = {panelSpieler, panelBot1, panelBot2, panelBot3};
+    
+    for (int i = 0; i < 4; i++) {
+        // Sicherstellen, dass die Panels ein passendes Layout haben (z. B. FlowLayout)
+        panels[i].setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
+        
+        for (int j = 0; j < 5; j++) {
+            felder[i][j] = new javax.swing.JTextField(2);
+            felder[i][j].setEditable(false);
+            felder[i][j].setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            panels[i].add(felder[i][j]);
+        }
+    }
+
+    gameController = new GameController(java.util.Arrays.asList(spieler));
+    gameController.wuerfeln();
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 5; j++) {
+            felder[i][j].setText(String.valueOf(spieler[i].getGewuerfelteWuerfel().get(j)));
+        }
+        // WICHTIG: Panels aktualisieren, damit Swing die neuen Felder zeichnet!
+        panels[i].revalidate();
+        panels[i].repaint();
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -48,6 +85,10 @@ public class Normalmodus extends javax.swing.JInternalFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        panelBot2 = new javax.swing.JPanel();
+        panelBot1 = new javax.swing.JPanel();
+        panelSpieler = new javax.swing.JPanel();
+        panelBot3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 600));
@@ -56,7 +97,7 @@ public class Normalmodus extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Bot 1");
 
-        jLabel3.setText("Bot 2");
+        jLabel3.setText("Bot 3");
 
         jLabel4.setText("Spieler");
 
@@ -72,6 +113,50 @@ public class Normalmodus extends javax.swing.JInternalFrame {
 
         jButton6.setText("6 Auge");
 
+        javax.swing.GroupLayout panelBot2Layout = new javax.swing.GroupLayout(panelBot2);
+        panelBot2.setLayout(panelBot2Layout);
+        panelBot2Layout.setHorizontalGroup(
+            panelBot2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelBot2Layout.setVerticalGroup(
+            panelBot2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 24, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelBot1Layout = new javax.swing.GroupLayout(panelBot1);
+        panelBot1.setLayout(panelBot1Layout);
+        panelBot1Layout.setHorizontalGroup(
+            panelBot1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 96, Short.MAX_VALUE)
+        );
+        panelBot1Layout.setVerticalGroup(
+            panelBot1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 33, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelSpielerLayout = new javax.swing.GroupLayout(panelSpieler);
+        panelSpieler.setLayout(panelSpielerLayout);
+        panelSpielerLayout.setHorizontalGroup(
+            panelSpielerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 177, Short.MAX_VALUE)
+        );
+        panelSpielerLayout.setVerticalGroup(
+            panelSpielerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 36, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelBot3Layout = new javax.swing.GroupLayout(panelBot3);
+        panelBot3.setLayout(panelBot3Layout);
+        panelBot3Layout.setHorizontalGroup(
+            panelBot3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 98, Short.MAX_VALUE)
+        );
+        panelBot3Layout.setVerticalGroup(
+            panelBot3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 23, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -79,26 +164,39 @@ public class Normalmodus extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(371, 371, 371)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel4)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(72, 72, 72))
+                            .addComponent(panelBot2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(jLabel2)
-                        .addGap(720, 720, 720)
-                        .addComponent(jLabel3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(371, 371, 371)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4))))
+                        .addGap(18, 18, 18)
+                        .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jButton1)
-                .addGap(62, 62, 62)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(63, 63, 63)
-                .addComponent(jButton4)
-                .addGap(63, 63, 63)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jButton1)
+                        .addGap(62, 62, 62)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addGap(63, 63, 63)
+                        .addComponent(jButton4)
+                        .addGap(63, 63, 63))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)))
                 .addComponent(jButton5)
                 .addGap(64, 64, 64)
                 .addComponent(jButton6)
@@ -108,12 +206,26 @@ public class Normalmodus extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(234, 234, 234)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelBot2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(180, 180, 180)
-                .addComponent(jLabel4)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(204, 204, 204)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(197, 197, 197)
+                                .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(138, 138, 138)
+                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(197, 197, 197)
+                        .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(62, 62, 62)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
@@ -163,5 +275,9 @@ public class Normalmodus extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel panelBot1;
+    private javax.swing.JPanel panelBot2;
+    private javax.swing.JPanel panelBot3;
+    private javax.swing.JPanel panelSpieler;
     // End of variables declaration//GEN-END:variables
 }
