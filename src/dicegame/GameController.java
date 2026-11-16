@@ -29,7 +29,8 @@ public class GameController {
     }
     
     public List<Spieler> bestimmeReihenfolge(){
-        
+        List<Spieler> spielerListe = new List<>();
+        return spielerListe;
     }
             
     public void bestimmeRollen(){
