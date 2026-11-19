@@ -35,36 +35,34 @@ public class Normalmodus extends javax.swing.JInternalFrame {
         this.setBorder(null);
         starteSpiel();
     }
- 
-    // Textboxen anlegen, würfeln, Zahlen anzeigen
-   // Textboxen anlegen, würfeln, Zahlen anzeigen
-private void starteSpiel() {
-    javax.swing.JPanel[] panels = {panelSpieler, panelBot1, panelBot2, panelBot3};
     
-    for (int i = 0; i < 4; i++) {
-        // Sicherstellen, dass die Panels ein passendes Layout haben (z. B. FlowLayout)
-        panels[i].setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
-        
-        for (int j = 0; j < 5; j++) {
-            felder[i][j] = new javax.swing.JTextField(2);
-            felder[i][j].setEditable(false);
-            felder[i][j].setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            panels[i].add(felder[i][j]);
+    
+private void starteSpiel() {
+        javax.swing.JPanel[] panels = {panelSpieler, panelBot1, panelBot2, panelBot3};
+
+        for (int i = 0; i < 4; i++) {
+            panels[i].setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
+
+            for (int j = 0; j < 5; j++) {
+                felder[i][j] = new javax.swing.JTextField(2);
+                felder[i][j].setEditable(false);
+                felder[i][j].setHorizontalAlignment(javax.swing.JTextField.CENTER);
+                panels[i].add(felder[i][j]);
+            }
+        }
+
+        gameController = new GameController(java.util.Arrays.asList(spieler));
+        gameController.wuerfeln();
+
+        for (int i = 0; i < 4; i++) {
+            java.util.List<Integer> wuerfe = gameController.getWuerfeVonSpieler(spieler[i]);
+            for (int j = 0; j < 5; j++) {
+                felder[i][j].setText(String.valueOf(wuerfe.get(j)));
+            }
+            panels[i].revalidate();
+            panels[i].repaint();
         }
     }
-
-    gameController = new GameController(java.util.Arrays.asList(spieler));
-    gameController.wuerfeln();
-
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 5; j++) {
-            felder[i][j].setText(String.valueOf(spieler[i].getGewuerfelteWuerfel().get(j)));
-        }
-        // WICHTIG: Panels aktualisieren, damit Swing die neuen Felder zeichnet!
-        panels[i].revalidate();
-        panels[i].repaint();
-    }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.

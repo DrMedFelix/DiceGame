@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dicegame;
+
 import java.util.*;
 
 /**
@@ -35,37 +32,48 @@ public class GameController {
         this.aktuelleWette = aktuelleWette;
         //liste moeglicheWetten
     }
-    
+
     public List<Spieler> bestimmeReihenfolge(){
         return null;
     }
-    
+
     public void bestimmeRollen(){
-        
+
     }
-    // Jeder Spieler bekommt 5 neue Zufallszahlen
+
+    // Jeder Spieler wuerfelt selbst seine Wuerfel
     public void wuerfeln(){
         for (Spieler spieler : spielerListe) {
-            wuerfeln(spieler);
+            spieler.wuerfeln(wuerfel, WUERFEL_PRO_SPIELER);
         }
     }
 
     public List<Integer> wuerfeln(Spieler spieler){
-        List<Integer> wuerfe = spieler.getGewuerfelteWuerfel();
-        wuerfe.clear();
-        for (int i = 0; i < WUERFEL_PRO_SPIELER; i++) {
-            wuerfe.add(wuerfel.getAugenzahl());
+        spieler.wuerfeln(wuerfel, WUERFEL_PRO_SPIELER);
+        return getWuerfeVonSpieler(spieler);
+    }
+
+    public List<Integer> getWuerfeVonSpieler(Spieler spieler){
+        return spieler.getGewuerfelteWuerfel();
+    }
+
+    public List<List<Integer>> getAlleWuerfe(){
+        List<List<Integer>> alleWuerfe = new ArrayList<>();
+        for (Spieler spieler : spielerListe) {
+            alleWuerfe.add(getWuerfeVonSpieler(spieler));
         }
-        return wuerfe;
+        return alleWuerfe;
     }
-    
+
     public void wettBewertungsCheck(){
-        
+
     }
+
     public void wuerfelAnzahlAktualisieren(){
-        
+
     }
+
     public void entferneSpielerReihenfolge(){
-        
+
     }
 }

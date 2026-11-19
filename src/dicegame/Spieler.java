@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Spieler {
 
+    private static final int STANDARD_ANZAHL_WUERFEL = 5;
+
     private boolean rolleSpieler1;
     private boolean rolleSpieler2;
 
@@ -15,7 +17,18 @@ public class Spieler {
         this.rolleSpieler1 = false;
         this.rolleSpieler2 = false;
     }
-    
+
+    public void wuerfeln(Wuerfel wuerfel) {
+        wuerfeln(wuerfel, STANDARD_ANZAHL_WUERFEL);
+    }
+
+    public void wuerfeln(Wuerfel wuerfel, int anzahlWuerfel) {
+        gewuerfelteWuerfel.clear();
+        for (int i = 0; i < anzahlWuerfel; i++) {
+            gewuerfelteWuerfel.add(wuerfel.getAugenzahl());
+        }
+    }
+
     public List<Integer> getGewuerfelteWuerfel() {
         return gewuerfelteWuerfel;
     }
