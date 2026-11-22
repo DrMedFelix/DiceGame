@@ -21,6 +21,7 @@ public class Normalmodus extends javax.swing.JInternalFrame {
     private final Spieler[] spieler = {new Spieler(), new Bot(), new Bot(), new Bot()};
     private final javax.swing.JTextField[][] felder = new javax.swing.JTextField[4][5];
     private GameController gameController;
+    private final java.util.List<Wette> gemachteWetten = new java.util.ArrayList<>();
  
     public Normalmodus() {
         initComponents();
@@ -29,14 +30,68 @@ public class Normalmodus extends javax.swing.JInternalFrame {
  
     public Normalmodus(HauptHintergrundFenster hauptFenster) {
         initComponents();
+        jSlider2.setMinimum(1);
+        jSlider2.setMaximum(5);
+        jSlider2.setValue(1);
+        jSlider2.setMajorTickSpacing(1);
+        jSlider2.setMinorTickSpacing(1);
+        jSlider2.setPaintTicks(true);
+        jSlider2.setPaintLabels(true);
+        jSlider2.setLabelTable(jSlider2.createStandardLabels(1));
+
+        jSlider1.setMinimum(1);
+        jSlider1.setMaximum(6);
+        jSlider1.setValue(1);
+        jSlider1.setMajorTickSpacing(1);
+        jSlider1.setMinorTickSpacing(1);
+        jSlider1.setPaintTicks(true);
+        jSlider1.setPaintLabels(true);
+        jSlider1.setLabelTable(jSlider1.createStandardLabels(1));
+        jSlider2.setLabelTable(jSlider2.createStandardLabels(1));
+        
         this.hauptFenster = hauptFenster;
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         this.setBorder(null);
         starteSpiel();
     }
-    
-    
+
+    private boolean pruefeUndBestaetigeWette(int gewaehlteAugenzahl, int gewaehlteMenge, Wette vorherigeWette) {
+    // 1. Grundbereich prüfen (an eure Regeln anpassbar)
+    if (gewaehlteAugenzahl < 1 || gewaehlteAugenzahl > 6 || gewaehlteMenge < 1) {
+        javax.swing.JOptionPane.showMessageDialog(
+            this,
+            "Ungültige Werte: Augenzahl oder Menge liegt außerhalb des Bereichs.",
+            "Ungültig",
+            javax.swing.JOptionPane.ERROR_MESSAGE
+        );
+        return false;
+    }
+
+// 2. Falls schon eine Wette vorliegt: muss mindestens um 1 höher sein
+//    (bereits gemachte / niedrigere Werte kommen nicht nochmal dran; unrealistische Wetten sind erlaubt)
+    if (vorherigeWette != null && gewaehlteAugenzahl < vorherigeWette.getAugenzahl() + 1) {
+        javax.swing.JOptionPane.showMessageDialog(
+            this,
+            "Ungültig: Die Augenzahl muss mindestens " + (vorherigeWette.getAugenzahl() + 1) + " sein.",
+            "Ungültig",
+            javax.swing.JOptionPane.ERROR_MESSAGE
+        );
+        return false;
+    }
+
+// TODO: Später prüfen, ob die Wette exakt schon in der Wetten-Liste vorkommt,
+// und später den separaten Passen-/Aufdecken-Button für die Feldprüfung anbinden.
+
+    javax.swing.JOptionPane.showMessageDialog(
+        this,
+        "Gültig: " + gewaehlteMenge + "x Augenzahl " + gewaehlteAugenzahl + " bestätigt.",
+        "Bestätigt",
+        javax.swing.JOptionPane.INFORMATION_MESSAGE
+    );
+    return true;
+}
+
 private void starteSpiel() {
         javax.swing.JPanel[] panels = {panelSpieler, panelBot1, panelBot2, panelBot3};
 
@@ -51,13 +106,13 @@ private void starteSpiel() {
             }
         }
 
-        gameController = new GameController(java.util.Arrays.asList(spieler));
+        //gameController = new GameController(java.util.Arrays.asList(spieler));
         gameController.wuerfeln();
 
         for (int i = 0; i < 4; i++) {
-            java.util.List<Integer> wuerfe = gameController.getWuerfeVonSpieler(spieler[i]);
+            //java.util.List<Integer> wuerfe = gameController.getWuerfeVonSpieler(spieler[i]);
             for (int j = 0; j < 5; j++) {
-                felder[i][j].setText(String.valueOf(wuerfe.get(j)));
+                //felder[i][j].setText(String.valueOf(wuerfe.get(j)));
             }
             panels[i].revalidate();
             panels[i].repaint();
@@ -77,16 +132,14 @@ private void starteSpiel() {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         panelBot2 = new javax.swing.JPanel();
         panelBot1 = new javax.swing.JPanel();
         panelSpieler = new javax.swing.JPanel();
         panelBot3 = new javax.swing.JPanel();
+        jSlider2 = new javax.swing.JSlider();
+        jSlider1 = new javax.swing.JSlider();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 600));
@@ -99,23 +152,11 @@ private void starteSpiel() {
 
         jLabel4.setText("Spieler");
 
-        jButton1.setText("1 Auge");
-
-        jButton2.setText("2 Auge");
-
-        jButton3.setText("3 Auge");
-
-        jButton4.setText("4 Auge");
-
-        jButton5.setText("5 Auge");
-
-        jButton6.setText("6 Auge");
-
         javax.swing.GroupLayout panelBot2Layout = new javax.swing.GroupLayout(panelBot2);
         panelBot2.setLayout(panelBot2Layout);
         panelBot2Layout.setHorizontalGroup(
             panelBot2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 99, Short.MAX_VALUE)
         );
         panelBot2Layout.setVerticalGroup(
             panelBot2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,50 +196,70 @@ private void starteSpiel() {
             .addGap(0, 23, Short.MAX_VALUE)
         );
 
+        jSlider2.setMajorTickSpacing(1);
+        jSlider2.setMinimum(1);
+        jSlider2.setMinorTickSpacing(1);
+        jSlider2.setPaintLabels(true);
+        jSlider2.setPaintTicks(true);
+        jSlider2.setValue(1);
+
+        jSlider1.setMajorTickSpacing(2);
+        jSlider1.setMaximum(6);
+        jSlider1.setMinimum(1);
+        jSlider1.setMinorTickSpacing(1);
+        jSlider1.setPaintLabels(true);
+        jSlider1.setPaintTicks(true);
+        jSlider1.setValue(1);
+
+        jButton1.setText("Wette Bestätigen");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        jButton2.setText("Würfel Aufdecken");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(276, 276, 276)
+                .addComponent(jLabel3)
+                .addGap(37, 37, 37))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addGap(379, 379, 379))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(240, 240, 240)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel4)
+                        .addGap(120, 120, 120))))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(371, 371, 371)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel4)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(72, 72, 72))
-                            .addComponent(panelBot2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(panelBot2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel2)
+                        .addContainerGap()
+                        .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jButton1)
-                        .addGap(62, 62, 62)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addGap(63, 63, 63)
-                        .addComponent(jButton4)
-                        .addGap(63, 63, 63))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)))
-                .addComponent(jButton5)
-                .addGap(64, 64, 64)
-                .addComponent(jButton6)
-                .addGap(21, 21, 21))
+                        .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,31 +272,58 @@ private void starteSpiel() {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(204, 204, 204)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)))
+                                .addComponent(jLabel2))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(197, 197, 197)
-                                .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(panelBot3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addGap(138, 138, 138)
-                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4))
+                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(197, 197, 197)
                         .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(62, 62, 62)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton4)
-                    .addComponent(jButton6)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)))
+                    .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int augenzahl = jSlider2.getValue();
+        int menge = jSlider1.getValue();
+
+    // TODO 1: Startspieler / Zugreihenfolge später dynamisch aus GameController holen
+    // (aktuell startet der Spieler, kann sich aber ändern)
+
+    // TODO 2: Vorherige Wette aus der Wetten-Liste holen (falls schon eine vorliegt)
+    // Regel: Neue Wette muss mindestens um +1 höher sein als die vorherige Wette
+    // und darf nicht bereits gemacht worden sein (auch unrealistische Wetten sind erlaubt).
+
+    // TODO 3: Bei Gültigkeit Wette in die Liste adden; bei Ungültigkeit Meldung ("Ungültig") ausgeben.
+    // Hinweis: Aufdecken/Passen läuft über einen separaten Button (folgt später).
+
+    System.out.println("Entwurf aktiv (noch keine Prüfung): Augenzahl=" + augenzahl + ", Menge=" + menge);
+    javax.swing.JOptionPane.showMessageDialog(
+        this,
+        "Geht noch nicht.",
+        "Hinweis",
+        javax.swing.JOptionPane.INFORMATION_MESSAGE
+    );
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -265,14 +353,12 @@ private void starteSpiel() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JSlider jSlider1;
+    private javax.swing.JSlider jSlider2;
     private javax.swing.JPanel panelBot1;
     private javax.swing.JPanel panelBot2;
     private javax.swing.JPanel panelBot3;
