@@ -52,7 +52,6 @@ public class GameController {
     public void bestimmeRollen() {
 
         for (int i = 0; i < spielerListe.size(); i++) {
-
             spielerListe.get(i).setRollen(
                     i == 0,
                     i == 1
@@ -60,11 +59,9 @@ public class GameController {
         }
     }
 
-    // Alle Spieler würfeln.
+    // Alle Spieler würfeln
     public void wuerfeln() {
-
         for (Spieler spieler : spielerListe) {
-
             spieler.wuerfeln(
                     wuerfel,
                     spieler.getWuerfelAnzahl()
@@ -72,60 +69,46 @@ public class GameController {
         }
     }
 
-    // Ein einzelner Spieler würfelt.
+    // Ein einzelner Spieler würfelt
     public List<Integer> wuerfeln(Spieler spieler) {
-
         spieler.wuerfeln(
                 wuerfel,
                 spieler.getWuerfelAnzahl()
         );
-
         return getWuerfeVonSpieler(spieler);
     }
 
     public List<Integer> getWuerfeVonSpieler(Spieler spieler) {
-
         return spieler.getGewuerfelteWuerfel();
     }
 
-    // Gibt alle Würfe zurück.
+    // Gibt alle Würfe zurück
     public List<List<Integer>> getAlleWuerfe() {
-
         List<List<Integer>> alleWuerfe = new ArrayList<>();
-
         for (Spieler spieler : spielerListe) {
-
-            alleWuerfe.add(
-                    getWuerfeVonSpieler(spieler)
-            );
+            alleWuerfe.add(getWuerfeVonSpieler(spieler));
         }
-
         return alleWuerfe;
     }
 
-    // Zählt, wie oft eine bestimmte Augenzahl vorkommt.
+    // Zählt, wie oft eine bestimmte Augenzahl vorkommt
     public int zaehleAugenzahl(int augenzahl) {
-
         int treffer = 0;
-
         for (Spieler spieler : spielerListe) {
-
             for (int wurf : spieler.getGewuerfelteWuerfel()) {
-
                 if (wurf == augenzahl) {
                     treffer++;
                 }
             }
         }
-
         return treffer;
     }
 
-    /**
-     * Prüft die Wette.
+    
+     /* Prüft die Wette
      *
-     * true  = Wette ist richtig
-     * false = Wette ist falsch
+     * true  = Wette richtig
+     * false = Wette falsch
      */
     public boolean wettBewertungsCheck(
             Wette wette,
@@ -134,132 +117,88 @@ public class GameController {
     ) {
 
         if (wette == null || wettsteller == null || zweifler == null) {
-
-            throw new IllegalArgumentException(
-                    "Wette und Spieler duerfen nicht null sein."
-            );
+            throw new IllegalArgumentException("Wette und Spieler duerfen nicht null sein.");
         }
 
-        // Alle Würfel im gesamten Spiel kontrollieren.
-        int anzahlTreffer = zaehleAugenzahl(
-                wette.getAugenzahl()
-        );
-
+        // Alle Würfel im gesamten Spiel kontrollieren
+        int anzahlTreffer = zaehleAugenzahl(wette.getAugenzahl());
         // Prüfen, ob die Wette stimmt.
         boolean wetteIstRichtig =
                 anzahlTreffer >= wette.getAnzahl();
-
         Spieler verlierer;
-
         if (wetteIstRichtig) {
-
-            // Die Wette stimmt.
-            // Der Zweifler verliert einen Würfel.
+            // Wette stimmt
+            // Zweifler verliert einen Würfel
             verlierer = zweifler;
-
         } else {
-
-            // Die Wette stimmt nicht.
-            // Der Wettsteller verliert einen Würfel.
+            // Wette stimmt nicht
+            // Wettsteller verliert einen Würfel
             verlierer = wettsteller;
         }
-
         verlierer.verliereZufaelligenWuerfel();
-
         return wetteIstRichtig;
     }
 
     /**
-     * Der Bot entscheidet über die aktuelle Wette.
+     * Der Bot entscheidet über die aktuelle Wette
      *
      * true  = Bot glaubt und erhöht
      * false = Bot zweifelt
      */
     public boolean botGlaubtUndErhoeht(Bot bot) {
-
         if (bot == null || aktuelleWette == null) {
-
             throw new IllegalArgumentException(
                     "Bot und aktuelle Wette muessen gesetzt sein."
             );
         }
-
         // Bot entscheidet.
         boolean glaubt = bot.treffeEntscheidung(
                 aktuelleWette,
                 getGesamtWuerfelAnzahl()
         );
-
-        // Wenn er nicht glaubt, wird die Wette angezweifelt.
+        // Wenn er nicht glaubt, wird die Wette angezweifelt
         if (!glaubt) {
             return false;
         }
-
-        // Bot versucht die Wette zu erhöhen.
+        // Bot versucht die Wette zu erhöhen
         Wette erhoehteWette = bot.erhoeheWette(
                 aktuelleWette
         );
-
-        // Falls die höchste Wette erreicht wurde.
+        // Falls die höchste Wette erreicht wurde
         if (erhoehteWette == null) {
             return false;
         }
-
-        // Neue Wette wird gespeichert.
+        // Neue Wette wird gespeichert
         aktuelleWette = erhoehteWette;
-
         return true;
     }
-
+    
     public void setAktuelleWette(Wette wette) {
-
         this.aktuelleWette = wette;
     }
 
     public Wette getAktuelleWette() {
-
         return aktuelleWette;
     }
 
-    // Zählt alle noch vorhandenen Würfel der Spieler.
+    // Zählt alle noch vorhandenen Würfel der Spieler
     public int getGesamtWuerfelAnzahl() {
-
         int gesamt = 0;
-
         for (Spieler spieler : spielerListe) {
-
             gesamt += spieler.getWuerfelAnzahl();
         }
-
         return gesamt;
     }
 
     public List<Spieler> getSpielerListe() {
-
         return new ArrayList<>(spielerListe);
     }
 
     public void wuerfelAnzahlAktualisieren() {
-
         aktuelleSpielWuerfelAnzahl =
                 getGesamtWuerfelAnzahl();
     }
 
-    public void entferneSpielerReihenfolge() {
-
-        // Später:
-        // Spieler ohne Würfel aus der Reihenfolge entfernen.
-    }
-    
-    // ========================================
-// ZUGSTEUERUNG / WETTKREISLAUF
-// ========================================
-
-/**
- * Startet den Wettkreislauf.
- * Bot 3 eröffnet mit einer Wette.
- * Danach ist Bot 2 dran.
- */
 public void starteWettKreislauf() {
 
     if (spielerListe.size() != 4) {
@@ -271,102 +210,77 @@ public void starteWettKreislauf() {
     rundeBeendet = false;
     aktuelleWette = null;
 
-    // Der Mensch eröffnet die erste Runde.
+    // Der User eröffnet die erste Runde
     aktuellerWettsteller = spielerListe.get(0);
     spielerAmZugIndex = 0;
 }
 
 
-/**
- * Bestimmt die häufigste Augenzahl eines Spielers.
- */
+
+//Bestimmt die häufigste Augenzahl eines Spielers
 private int haeufigsteAugenzahl(Spieler spieler) {
-
     int[] haeufigkeit = new int[7];
-
     for (int wurf : spieler.getGewuerfelteWuerfel()) {
         haeufigkeit[wurf]++;
     }
-
     int besteAugenzahl = 1;
-
     for (int i = 2; i <= 6; i++) {
-
         if (haeufigkeit[i] > haeufigkeit[besteAugenzahl]) {
             besteAugenzahl = i;
         }
     }
-
     return besteAugenzahl;
 }
 
 
-/**
- * Gibt zurück, wer gerade am Zug ist.
- */
-public Spieler getSpielerAmZug() {
 
+//Gibt zurück, wer gerade am Zug ist 
+public Spieler getSpielerAmZug() {
     if (spielerAmZugIndex < 0) {
         return null;
     }
-
     return spielerListe.get(spielerAmZugIndex);
 }
 
-
-/**
- * Prüft, ob gerade der menschliche Spieler am Zug ist.
- */
+//Prüft, ob gerade der menschliche Spieler am Zug ist.
 public boolean istSpielerAmZug() {
-
     return spielerAmZugIndex == 0
             && !rundeBeendet;
 }
 
 
-/**
- * Gibt den aktuellen Wettsteller zurück.
- */
+//Gibt den aktuellen Wettsteller zurück.
 public Spieler getAktuellerWettsteller() {
     return aktuellerWettsteller;
 }
 
-
-/**
- * Gibt zurück, ob die Runde beendet wurde.
- */
+//Gibt zurück, ob die Runde beendet wurde.
 public boolean isRundeBeendet() {
     return rundeBeendet;
 }
 
 
 /**
- * Zum nächsten Spieler wechseln.
- *
+ * Zum nächsten Spieler wechseln
  * Reihenfolge:
  * Bot 3 -> Bot 2 -> Bot 1 -> Spieler -> Bot 3
  */
 private void geheZumNaechstenSpieler() {
-
     if (spielerAmZugIndex == 0) {
         spielerAmZugIndex = 3;
     } else {
         spielerAmZugIndex--;
     }
-
     // Spieler ohne Würfel überspringen
     int versuche = 0;
-
     while (spielerListe.get(spielerAmZugIndex)
             .getWuerfelAnzahl() <= 0
             && versuche < 4) {
-
         if (spielerAmZugIndex == 0) {
             spielerAmZugIndex = 3;
         } else {
             spielerAmZugIndex--;
         }
-
         versuche++;
     }
 }
@@ -374,132 +288,63 @@ private void geheZumNaechstenSpieler() {
 
 /**
  * Automatische Bot-Züge durchführen,
- * bis der Mensch am Zug ist oder die Runde endet.
+ * bis der Mensch am Zug ist oder Runde endet
  */
 public String verarbeiteBotZuegeBisSpieler() {
-
     StringBuilder meldungen = new StringBuilder();
     int sicherheitsLimit = 50;
-
+    
     while (!rundeBeendet
             && spielerAmZugIndex != 0
             && sicherheitsLimit > 0) {
-
+        
         sicherheitsLimit--;
-
         Spieler aktuellerSpieler = getSpielerAmZug();
-
         if (!(aktuellerSpieler instanceof Bot)) {
             break;
         }
 
         Bot bot = (Bot) aktuellerSpieler;
-
-        boolean glaubt = bot.treffeEntscheidung(
-                aktuelleWette,
-                getGesamtWuerfelAnzahl()
-        );
+        boolean glaubt = bot.treffeEntscheidung(aktuelleWette,getGesamtWuerfelAnzahl());
 
         // Bot zweifelt
         if (!glaubt) {
+            boolean wetteRichtig = wettBewertungsCheck(aktuelleWette,aktuellerWettsteller,bot);
+            int treffer = zaehleAugenzahl(aktuelleWette.getAugenzahl());
 
-            boolean wetteRichtig = wettBewertungsCheck(
-                    aktuelleWette,
-                    aktuellerWettsteller,
-                    bot
-            );
+            Spieler verlierer = wetteRichtig ? bot : aktuellerWettsteller;
 
-            int treffer = zaehleAugenzahl(
-                    aktuelleWette.getAugenzahl()
-            );
-
-            Spieler verlierer = wetteRichtig
-                    ? bot
-                    : aktuellerWettsteller;
-
-            meldungen.append(
-                    botName(bot) + " zweifelt an. "
-                    + (wetteRichtig
-                    ? "Wette stimmt! "
-                    : "Wette falsch! ")
-                    + botName(verlierer)
-                    + " verliert einen Würfel. Treffer: "
-                    + treffer
-                    + "\n"
-            );
-
-            String neueRunde =
-                    starteNeueRundeNachVerlust(verlierer);
-
+            meldungen.append(botName(bot) + " zweifelt an. " + (wetteRichtig ? "Wette stimmt! " : "Wette falsch! ") + botName(verlierer) + " verliert einen Würfel. Treffer: " + treffer + "\n");
+            String neueRunde = starteNeueRundeNachVerlust(verlierer);
             meldungen.append(neueRunde);
-
             if (rundeBeendet || spielerAmZugIndex == 0) {
                 return meldungen.toString();
             }
-
-            // Bot eröffnet die nächste Runde.
-            // Der Kreislauf läuft weiter.
+            // Bot eröffnet die nächste Runde
+            // Der Kreislauf läuft weiter
             continue;
         }
 
         // Bot versucht zu erhöhen
-        Wette erhoehteWette =
-                bot.erhoeheWette(aktuelleWette);
+        Wette erhoehteWette = bot.erhoeheWette(aktuelleWette);
 
         // Bot kann nicht erhöhen und zweifelt an.
         if (erhoehteWette == null) {
-
-            boolean wetteRichtig = wettBewertungsCheck(
-                    aktuelleWette,
-                    aktuellerWettsteller,
-                    bot
-            );
-
-            int treffer = zaehleAugenzahl(
-                    aktuelleWette.getAugenzahl()
-            );
-
-            Spieler verlierer = wetteRichtig
-                    ? bot
-                    : aktuellerWettsteller;
-
-            meldungen.append(
-                    botName(bot)
-                    + " kann nicht erhöhen und zweifelt an. "
-                    + (wetteRichtig
-                    ? "Wette stimmt! "
-                    : "Wette falsch! ")
-                    + botName(verlierer)
-                    + " verliert einen Würfel. Treffer: "
-                    + treffer
-                    + "\n"
-            );
-
-            String neueRunde =
-                    starteNeueRundeNachVerlust(verlierer);
-
+            boolean wetteRichtig = wettBewertungsCheck(aktuelleWette,aktuellerWettsteller,bot);
+            int treffer = zaehleAugenzahl(aktuelleWette.getAugenzahl());
+            Spieler verlierer = wetteRichtig ? bot : aktuellerWettsteller;
+            meldungen.append(botName(bot) + " kann nicht erhöhen und zweifelt an. " + (wetteRichtig ? "Wette stimmt! " : "Wette falsch! ") + botName(verlierer) + " verliert einen Würfel. Treffer: " + treffer + "\n");
+            String neueRunde = starteNeueRundeNachVerlust(verlierer);
             meldungen.append(neueRunde);
-
             if (rundeBeendet || spielerAmZugIndex == 0) {
                 return meldungen.toString();
             }
-
             continue;
         }
-
         // Wette wurde erhöht
         aktuelleWette = erhoehteWette;
         aktuellerWettsteller = bot;
-
-        meldungen.append(
-                botName(bot)
-                + " erhöht auf "
-                + aktuelleWette.getAnzahl()
-                + "x die "
-                + aktuelleWette.getAugenzahl()
-                + "\n"
-        );
-
+        meldungen.append(botName(bot) + " erhöht auf " + aktuelleWette.getAnzahl() + "x die " + aktuelleWette.getAugenzahl() + "\n");
         geheZumNaechstenSpieler();
     }
 
@@ -508,20 +353,14 @@ public String verarbeiteBotZuegeBisSpieler() {
     } else if (spielerAmZugIndex == 0) {
         meldungen.append("Du bist wieder am Zug!");
     }
-
     return meldungen.toString();
 }
 
-
-/**
- * Menschlicher Spieler erhöht die Wette.
- */
+//Menschlicher Spieler erhöht die Wette
 public boolean spielerErhoehtWette(Wette neueWette) {
-
     if (!istSpielerAmZug() || neueWette == null) {
         return false;
     }
-
     // Eröffnungswette
     if (aktuelleWette == null) {
         aktuelleWette = neueWette;
@@ -534,72 +373,40 @@ public boolean spielerErhoehtWette(Wette neueWette) {
     if (!istWetteHoeher(neueWette, aktuelleWette)) {
         return false;
     }
-
     aktuelleWette = neueWette;
     aktuellerWettsteller = spielerListe.get(0);
-
     geheZumNaechstenSpieler();
-
     return true;
 }
 
-
-/**
- * Menschlicher Spieler zweifelt an.
- */
+//Menschlicher Spieler zweifelt an
+ 
 public String spielerZweifeltAn() {
-
     if (!istSpielerAmZug() || aktuelleWette == null) {
         return "Du bist gerade nicht am Zug.";
     }
-
     Spieler mensch = spielerListe.get(0);
-
-    boolean wetteRichtig = wettBewertungsCheck(
-            aktuelleWette,
-            aktuellerWettsteller,
-            mensch
-    );
-
-    int treffer = zaehleAugenzahl(
-            aktuelleWette.getAugenzahl()
-    );
-
-    Spieler verlierer = wetteRichtig
-            ? mensch
-            : aktuellerWettsteller;
-
-    String auswertung =
-            (wetteRichtig
-            ? "Wette stimmt! "
-            : "Wette falsch! ")
-            + botName(verlierer)
-            + " verliert einen Würfel. Treffer: "
-            + treffer;
-
-    String neueRunde =
-            starteNeueRundeNachVerlust(verlierer);
+    boolean wetteRichtig = wettBewertungsCheck(aktuelleWette,aktuellerWettsteller,mensch);
+    int treffer = zaehleAugenzahl(aktuelleWette.getAugenzahl());
+    Spieler verlierer = wetteRichtig ? mensch : aktuellerWettsteller;
+    String auswertung =(wetteRichtig ? "Wette stimmt! " : "Wette falsch! ") + botName(verlierer) + " verliert einen Würfel. Treffer: " + treffer;
+    String neueRunde = starteNeueRundeNachVerlust(verlierer);
 
     if (rundeBeendet || spielerAmZugIndex == 0) {
         return auswertung + "\n" + neueRunde;
     }
 
     // Falls ein Bot die nächste Runde eröffnet,
-    // führen die Bots ihre Züge automatisch aus.
-    return auswertung + "\n"
-            + neueRunde + "\n"
-            + verarbeiteBotZuegeBisSpieler();
+    // führen die Bots ihre Züge automatisch aus
+    return auswertung + "\n" + neueRunde + "\n" + verarbeiteBotZuegeBisSpieler();
 }
 
 private String starteNeueRundeNachVerlust(Spieler verlierer) {
-
     rundeBeendet = false;
     aktuelleWette = null;
-
-    // Alle würfeln erneut, aber nur mit den verbliebenen Würfeln.
+    // Alle würfeln erneut, aber nur mit den verbliebenen Würfeln
     wuerfeln();
-
-    // Prüfen, ob das Spiel bereits entschieden ist.
+    // Prüfen, ob Spiel bereits entschieden ist
     int aktiveSpieler = 0;
 
     for (Spieler s : spielerListe) {
@@ -618,53 +425,37 @@ private String starteNeueRundeNachVerlust(Spieler verlierer) {
     // Falls der Verlierer keine Würfel mehr hat,
     // wird der nächste aktive Spieler Eröffner.
     if (index < 0 || verlierer.getWuerfelAnzahl() <= 0) {
-
         int versuche = 0;
-
         do {
             index--;
-
             if (index < 0) {
                 index = spielerListe.size() - 1;
             }
-
             versuche++;
-
         } while (
                 spielerListe.get(index).getWuerfelAnzahl() <= 0
                 && versuche < spielerListe.size()
         );
     }
-
     aktuellerWettsteller = spielerListe.get(index);
     spielerAmZugIndex = index;
-
     // Mensch eröffnet
     if (index == 0) {
         return "Neue Runde! Du eröffnest die Wette.";
     }
-
     // Bot eröffnet automatisch mit einer Wette
     Bot bot = (Bot) spielerListe.get(index);
-
     int augenzahl = haeufigsteAugenzahl(bot);
-
     aktuelleWette = new Wette(augenzahl, 1);
-
-    String meldung = botName(bot)
-            + " eröffnet mit 1x die "
-            + augenzahl;
-
+    String meldung = botName(bot) + " eröffnet mit 1x die " + augenzahl;
     // Nach der Eröffnungswette ist der nächste Spieler dran.
     geheZumNaechstenSpieler();
-
     return meldung;
 }
 
 
-/**
- * Prüft, ob die neue Wette höher ist.
- */
+
+//Prüft, ob die neue Wette höher ist
 private boolean istWetteHoeher(
         Wette neueWette,
         Wette alteWette
@@ -674,18 +465,9 @@ private boolean istWetteHoeher(
         return false;
     }
 
-    return neueWette.getAnzahl() > alteWette.getAnzahl()
-
-            || (
-
-            neueWette.getAnzahl() == alteWette.getAnzahl()
-
-            && neueWette.getAugenzahl()
-                    > alteWette.getAugenzahl()
-    );
+    return neueWette.getAnzahl() > alteWette.getAnzahl()|| (neueWette.getAnzahl() == alteWette.getAnzahl()&& neueWette.getAugenzahl()> alteWette.getAugenzahl());
 }
     private String botName(Spieler spieler) {
-        
         for (int i = 0; i < spielerListe.size(); i++) {
             if (spielerListe.get(i) == spieler) {
                 if (i == 1) return "Bot 1";

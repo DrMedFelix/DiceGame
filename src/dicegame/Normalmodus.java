@@ -11,10 +11,6 @@ package dicegame;
 public class Normalmodus extends javax.swing.JInternalFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Normalmodus.class.getName());
-
-    /**
-     * Creates new form Normalmodus
-     */
     private HauptHintergrundFenster hauptFenster;
     private Wette aktuelleGUIWette;
     private boolean wetteGestartet = false;
@@ -63,26 +59,19 @@ private void starteSpiel() {
     gameController = new GameController(
             java.util.Arrays.asList(spieler)
     );
-
     gameController.wuerfeln();
-
     // Würfel anzeigen
     aktualisiereWuerfelAnzeige();
-
     // Wettkreislauf starten: Bot 3 eröffnet
     gameController.starteWettKreislauf();
-
     fuegeSpielverlaufHinzu("Du eröffnest die Runde! Stelle deine erste Wette.");
-
-   btnWetteAbschicken.setEnabled(true);
+    btnWetteAbschicken.setEnabled(true);
     btnWetteErhoehen.setEnabled(false);
     btnWetteAnzweifeln.setEnabled(false);
-
     sliderAugenzahl.setEnabled(true);
     sliderAnzahl.setEnabled(true);
     // Aktuelle Wette in der GUI anzeigen
     aktuelleGUIWette = gameController.getAktuelleWette();
-
     if (aktuelleGUIWette != null) {
         lblAktuelleWette.setText(
                 "Aktuelle Wette: "
@@ -96,7 +85,6 @@ private void starteSpiel() {
     btnWetteAbschicken.setEnabled(true);
     btnWetteErhoehen.setEnabled(false);
     btnWetteAnzweifeln.setEnabled(false);
-
     sliderAugenzahl.setEnabled(true);
     sliderAnzahl.setEnabled(true);
     // Falls die Bots bereits angezweifelt haben:
@@ -369,151 +357,95 @@ private void starteSpiel() {
     };
 
     for (int i = 0; i < 4; i++) {
-
         panels[i].removeAll();
-
-        panels[i].setLayout(
-                new java.awt.FlowLayout(
-                        java.awt.FlowLayout.CENTER, 5, 2
-                )
-        );
+        panels[i].setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 2));
 
         java.util.List<Integer> wuerfe =
                 spieler[i].getGewuerfelteWuerfel();
-
-        int anzahl = Math.min(
-                spieler[i].getWuerfelAnzahl(),
-                wuerfe.size()
-        );
+        int anzahl = Math.min(spieler[i].getWuerfelAnzahl(),wuerfe.size());
 
         for (int j = 0; j < anzahl; j++) {
-
             felder[i][j] = new javax.swing.JTextField(2);
-
             felder[i][j].setEditable(false);
-
-            felder[i][j].setHorizontalAlignment(
-                    javax.swing.JTextField.CENTER
-            );
-
-            felder[i][j].setText(
-                    String.valueOf(wuerfe.get(j))
-            );
-
+            felder[i][j].setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            felder[i][j].setText(String.valueOf(wuerfe.get(j)));
             panels[i].add(felder[i][j]);
         }
-
         panels[i].revalidate();
         panels[i].repaint();
     }
 }
     
     private void verarbeiteMeineWette() {
-
     int augenzahl = sliderAugenzahl.getValue();
     int anzahl = sliderAnzahl.getValue();
-
     Wette neueWette = new Wette(augenzahl, anzahl);
-
     boolean erfolgreich = gameController.spielerErhoehtWette(neueWette);
-
     if (!erfolgreich) {
         fuegeSpielverlaufHinzu("Die Wette ist ungültig oder nicht hoch genug!");
         return;
     }
-
     btnWetteAbschicken.setEnabled(false);
     btnWetteErhoehen.setEnabled(false);
     btnWetteAnzweifeln.setEnabled(false);
-
     sliderAugenzahl.setEnabled(false);
     sliderAnzahl.setEnabled(false);
-
     String ergebnis = gameController.verarbeiteBotZuegeBisSpieler();
-
     aktuelleGUIWette = gameController.getAktuelleWette();
-
     if (aktuelleGUIWette != null) {
-        lblAktuelleWette.setText(
-                aktuelleGUIWette.getAnzahl()
-                + "x die "
-                + aktuelleGUIWette.getAugenzahl()
-        );
+        lblAktuelleWette.setText(aktuelleGUIWette.getAnzahl() + "x die " + aktuelleGUIWette.getAugenzahl());
     }
-
+    
     fuegeSpielverlaufHinzu(ergebnis);
     aktualisiereWuerfelAnzeige();
 
     if (gameController.isRundeBeendet()) {
-
         btnWetteAbschicken.setEnabled(false);
         btnWetteErhoehen.setEnabled(false);
         btnWetteAnzweifeln.setEnabled(false);
-
         sliderAugenzahl.setEnabled(false);
         sliderAnzahl.setEnabled(false);
-
     } else if (gameController.istSpielerAmZug()) {
-
         sliderAugenzahl.setEnabled(true);
         sliderAnzahl.setEnabled(true);
-
         if (gameController.getAktuelleWette() == null) {
-
             btnWetteAbschicken.setEnabled(true);
             btnWetteErhoehen.setEnabled(false);
             btnWetteAnzweifeln.setEnabled(false);
-
         } else {
-
             btnWetteAbschicken.setEnabled(false);
             btnWetteErhoehen.setEnabled(true);
             btnWetteAnzweifeln.setEnabled(true);
         }
-
     } else {
-
         btnWetteAbschicken.setEnabled(false);
         btnWetteErhoehen.setEnabled(false);
         btnWetteAnzweifeln.setEnabled(false);
-
         sliderAugenzahl.setEnabled(false);
         sliderAnzahl.setEnabled(false);
     }
-
     System.out.println(ergebnis);
 }
     
     private void btnWetteAnzweifelnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWetteAnzweifelnActionPerformed
-         String ergebnis = gameController.spielerZweifeltAn();
-
+    String ergebnis = gameController.spielerZweifeltAn();
     fuegeSpielverlaufHinzu(ergebnis);
-
     aktuelleGUIWette = gameController.getAktuelleWette();
-
+    
     if (aktuelleGUIWette != null) {
-        lblAktuelleWette.setText(
-                aktuelleGUIWette.getAnzahl()
-                + "x die "
-                + aktuelleGUIWette.getAugenzahl()
-        );
+        lblAktuelleWette.setText(aktuelleGUIWette.getAnzahl() + "x die " + aktuelleGUIWette.getAugenzahl());
     }
-
     aktualisiereWuerfelAnzeige();
 
     if (gameController.isRundeBeendet()) {
         btnWetteAbschicken.setEnabled(false);
         btnWetteErhoehen.setEnabled(false);
         btnWetteAnzweifeln.setEnabled(false);
-
         sliderAugenzahl.setEnabled(false);
         sliderAnzahl.setEnabled(false);
-
     } else if (gameController.istSpielerAmZug()) {
-
         sliderAugenzahl.setEnabled(true);
         sliderAnzahl.setEnabled(true);
-
         if (gameController.getAktuelleWette() == null) {
             btnWetteAbschicken.setEnabled(true);
             btnWetteErhoehen.setEnabled(false);
@@ -523,7 +455,6 @@ private void starteSpiel() {
             btnWetteErhoehen.setEnabled(true);
             btnWetteAnzweifeln.setEnabled(true);
         }
-
     } else {
         btnWetteAbschicken.setEnabled(false);
         btnWetteErhoehen.setEnabled(false);

@@ -10,9 +10,7 @@ public class Spieler {
 
     private boolean rolleSpieler1;
     private boolean rolleSpieler2;
-
     private int wuerfelAnzahl = STANDARD_ANZAHL_WUERFEL;
-
     private final List<Integer> gewuerfelteWuerfel = new ArrayList<>();
     private final Random random = new Random();
 
@@ -27,9 +25,7 @@ public class Spieler {
 
     public void wuerfeln(Wuerfel wuerfel, int anzahlWuerfel) {
         gewuerfelteWuerfel.clear();
-
         int tatsaechlicheAnzahl = Math.min(anzahlWuerfel, wuerfelAnzahl);
-
         for (int i = 0; i < tatsaechlicheAnzahl; i++) {
             gewuerfelteWuerfel.add(wuerfel.getAugenzahl());
         }
@@ -49,11 +45,8 @@ public class Spieler {
         }
 
         int index = random.nextInt(gewuerfelteWuerfel.size());
-
         Integer verloren = gewuerfelteWuerfel.remove(index);
-
         wuerfelAnzahl--;
-
         return verloren;
     }
 
@@ -63,9 +56,7 @@ public class Spieler {
                     "Die Wuerfelanzahl darf nicht negativ sein."
             );
         }
-
         wuerfelAnzahl = anzahl;
-
         if (gewuerfelteWuerfel.size() > anzahl) {
             gewuerfelteWuerfel.subList(anzahl, gewuerfelteWuerfel.size()).clear();
         }
