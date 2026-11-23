@@ -12,6 +12,7 @@ public class Normalmodus extends javax.swing.JInternalFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Normalmodus.class.getName());
     private HauptHintergrundFenster hauptFenster;
+    private javax.swing.Timer botTimer;
     private Wette aktuelleGUIWette;
     private boolean wetteGestartet = false;
     private Spieler aktuellerWettsteller;
@@ -37,14 +38,15 @@ public class Normalmodus extends javax.swing.JInternalFrame {
     
     
 private void starteSpiel() {
-
+    if (botTimer != null && botTimer.isRunning()) {
+        botTimer.stop();
+    }
     javax.swing.JPanel[] panels = {
         panelSpieler,
         panelBot1,
         panelBot2,
         panelBot3
     };
-
     // Panels vorbereiten
     for (int i = 0; i < 4; i++) {
         panels[i].removeAll();
@@ -54,7 +56,17 @@ private void starteSpiel() {
                 )
         );
     }
-
+    
+    User aktiverUser = UserVerwaltung.getInstance().getAktiverUser();
+    if (aktiverUser != null) {
+        spieler[0] = aktiverUser;
+    if (aktiverUser.getName() != null && !aktiverUser.getName().isBlank()) {
+        jLabel4.setText(aktiverUser.getName());
+    }
+    } else {
+        jLabel4.setText("Spieler");
+    }
+    
     // Controller erstellen und würfeln
     gameController = new GameController(
             java.util.Arrays.asList(spieler)
@@ -64,6 +76,8 @@ private void starteSpiel() {
     aktualisiereWuerfelAnzeige();
     // Wettkreislauf starten: Bot 3 eröffnet
     gameController.starteWettKreislauf();
+    markiereAktivenSpieler(0);
+    markiereAktivenSpieler(gameController.getSpielerAmZugIndex());
     fuegeSpielverlaufHinzu("Du eröffnest die Runde! Stelle deine erste Wette.");
     btnWetteAbschicken.setEnabled(true);
     btnWetteErhoehen.setEnabled(false);
@@ -97,6 +111,73 @@ private void starteSpiel() {
         panels[i].repaint();
     }
 }
+
+private void markiereAktivenSpieler(int aktiverIndex) {
+    javax.swing.JLabel[] namensLabels = {
+        jLabel4, // 0: Spieler / User
+        jLabel2, // 1: Bot 1
+        jLabel1, // 2: Bot 2
+        jLabel3  // 3: Bot 3
+    };
+
+    javax.swing.border.Border aktiverRahmen =
+            javax.swing.BorderFactory.createLineBorder(new java.awt.Color(46, 204, 113), 2);
+    javax.swing.border.Border leererRahmen =
+            javax.swing.BorderFactory.createEmptyBorder(2, 4, 2, 4);
+
+    for (int i = 0; i < namensLabels.length; i++) {
+        if (i == aktiverIndex) {
+            namensLabels[i].setBorder(aktiverRahmen);
+        } else {
+            namensLabels[i].setBorder(leererRahmen);
+        }
+        namensLabels[i].revalidate();
+        namensLabels[i].repaint();
+    }
+}
+
+    private void zeigeBotZuegeMitRahmen(String ergebnis) {
+    if (botTimer != null && botTimer.isRunning()) {
+        botTimer.stop();
+    }
+
+    java.util.List<Integer> reihenfolge = new java.util.ArrayList<>();
+    if (ergebnis != null) {
+        for (String zeile : ergebnis.split("\\R")) {
+            String z = zeile.trim();
+            int idx = -1;
+            if (z.startsWith("Bot 1")) idx = 1;
+            else if (z.startsWith("Bot 2")) idx = 2;
+            else if (z.startsWith("Bot 3")) idx = 3;
+            else if (z.startsWith("Du") || z.startsWith("Neue Runde! Du")) idx = 0;
+
+            if (idx != -1 && (reihenfolge.isEmpty() || reihenfolge.get(reihenfolge.size() - 1) != idx)) {
+                reihenfolge.add(idx);
+            }
+        }
+    }
+
+    if (reihenfolge.size() <= 1) {
+        markiereAktivenSpieler(gameController.getSpielerAmZugIndex());
+        return;
+    }
+
+    markiereAktivenSpieler(reihenfolge.get(0));
+
+    final int[] schritt = {1};
+    botTimer = new javax.swing.Timer(800, e -> {
+        if (schritt[0] < reihenfolge.size()) {
+            markiereAktivenSpieler(reihenfolge.get(schritt[0]));
+            schritt[0]++;
+        } else {
+            ((javax.swing.Timer) e.getSource()).stop();
+            markiereAktivenSpieler(gameController.getSpielerAmZugIndex());
+        }
+    });
+    botTimer.setInitialDelay(800);
+    botTimer.start();
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -109,12 +190,10 @@ private void starteSpiel() {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         panelBot2 = new javax.swing.JPanel();
         panelBot1 = new javax.swing.JPanel();
         panelSpieler = new javax.swing.JPanel();
         panelBot3 = new javax.swing.JPanel();
-        sliderAugenzahl = new javax.swing.JSlider();
         sliderAnzahl = new javax.swing.JSlider();
         btnWetteAbschicken = new javax.swing.JButton();
         btnWetteAnzweifeln = new javax.swing.JButton();
@@ -123,6 +202,8 @@ private void starteSpiel() {
         lblStatus = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtSpielverlauf = new javax.swing.JTextArea();
+        sliderAugenzahl = new javax.swing.JSlider();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 600));
@@ -132,8 +213,6 @@ private void starteSpiel() {
         jLabel2.setText("Bot 1");
 
         jLabel3.setText("Bot 3");
-
-        jLabel4.setText("Spieler");
 
         javax.swing.GroupLayout panelBot2Layout = new javax.swing.GroupLayout(panelBot2);
         panelBot2.setLayout(panelBot2Layout);
@@ -161,7 +240,7 @@ private void starteSpiel() {
         panelSpieler.setLayout(panelSpielerLayout);
         panelSpielerLayout.setHorizontalGroup(
             panelSpielerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 177, Short.MAX_VALUE)
+            .addGap(0, 285, Short.MAX_VALUE)
         );
         panelSpielerLayout.setVerticalGroup(
             panelSpielerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,12 +258,7 @@ private void starteSpiel() {
             .addGap(0, 23, Short.MAX_VALUE)
         );
 
-        sliderAugenzahl.setMajorTickSpacing(1);
-        sliderAugenzahl.setMaximum(6);
-        sliderAugenzahl.setMinimum(1);
-        sliderAugenzahl.setPaintLabels(true);
-        sliderAugenzahl.setPaintTicks(true);
-
+        sliderAnzahl.setMajorTickSpacing(5);
         sliderAnzahl.setMaximum(20);
         sliderAnzahl.setMinimum(1);
         sliderAnzahl.setMinorTickSpacing(1);
@@ -212,6 +286,14 @@ private void starteSpiel() {
         txtSpielverlauf.setWrapStyleWord(true);
         jScrollPane1.setViewportView(txtSpielverlauf);
 
+        sliderAugenzahl.setMajorTickSpacing(1);
+        sliderAugenzahl.setMaximum(6);
+        sliderAugenzahl.setMinimum(1);
+        sliderAugenzahl.setPaintLabels(true);
+        sliderAugenzahl.setPaintTicks(true);
+
+        jLabel4.setText("Spieler");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -219,13 +301,8 @@ private void starteSpiel() {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(btnWetteAbschicken)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnWetteAnzweifeln)
-                        .addGap(166, 166, 166)
+                        .addGap(464, 464, 464)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel4)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(72, 72, 72))
@@ -234,38 +311,43 @@ private void starteSpiel() {
                         .addGap(6, 6, 6)
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
+                        .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(142, 142, 142)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnWetteErhoehen)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(lblAktuelleWette)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
+                                .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(142, 142, 142)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblAktuelleWette)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel3))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblStatus)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(lblStatus)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap(116, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addComponent(sliderAnzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addComponent(sliderAugenzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(240, 240, 240))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addGap(288, 288, 288))
             .addGroup(layout.createSequentialGroup()
-                .addGap(330, 330, 330)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(330, 330, 330)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(sliderAnzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(sliderAugenzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnWetteAbschicken)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnWetteAnzweifeln)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnWetteErhoehen)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -295,23 +377,23 @@ private void starteSpiel() {
                         .addGap(10, 10, 10)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblStatus)
-                .addGap(77, 77, 77)
-                .addComponent(btnWetteErhoehen)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4))
+                        .addGap(106, 106, 106)
+                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(sliderAugenzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sliderAnzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(93, 93, 93)
+                        .addComponent(jLabel4)
+                        .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnWetteAbschicken)
-                            .addComponent(btnWetteAnzweifeln))))
-                .addGap(68, 68, 68))
+                            .addComponent(sliderAnzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sliderAugenzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnWetteAbschicken)
+                    .addComponent(btnWetteAnzweifeln)
+                    .addComponent(btnWetteErhoehen))
+                .addContainerGap())
         );
 
         pack();
@@ -377,24 +459,24 @@ private void starteSpiel() {
 }
     
     private void verarbeiteMeineWette() {
-    int augenzahl = sliderAugenzahl.getValue();
-    int anzahl = sliderAnzahl.getValue();
-    Wette neueWette = new Wette(augenzahl, anzahl);
-    boolean erfolgreich = gameController.spielerErhoehtWette(neueWette);
-    if (!erfolgreich) {
-        fuegeSpielverlaufHinzu("Die Wette ist ungültig oder nicht hoch genug!");
-        return;
-    }
-    btnWetteAbschicken.setEnabled(false);
-    btnWetteErhoehen.setEnabled(false);
-    btnWetteAnzweifeln.setEnabled(false);
-    sliderAugenzahl.setEnabled(false);
-    sliderAnzahl.setEnabled(false);
-    String ergebnis = gameController.verarbeiteBotZuegeBisSpieler();
-    aktuelleGUIWette = gameController.getAktuelleWette();
-    if (aktuelleGUIWette != null) {
-        lblAktuelleWette.setText(aktuelleGUIWette.getAnzahl() + "x die " + aktuelleGUIWette.getAugenzahl());
-    }
+        int augenzahl = sliderAugenzahl.getValue();
+        int anzahl = sliderAnzahl.getValue();
+        Wette neueWette = new Wette(augenzahl, anzahl);
+        boolean erfolgreich = gameController.spielerErhoehtWette(neueWette);
+        if (!erfolgreich) {
+            fuegeSpielverlaufHinzu("Die Wette ist ungültig oder nicht hoch genug!");
+            return;
+        }
+        btnWetteAbschicken.setEnabled(false);
+        btnWetteErhoehen.setEnabled(false);
+        btnWetteAnzweifeln.setEnabled(false);
+        sliderAugenzahl.setEnabled(false);
+        sliderAnzahl.setEnabled(false);
+        String ergebnis = gameController.verarbeiteBotZuegeBisSpieler();
+        aktuelleGUIWette = gameController.getAktuelleWette();
+        if (aktuelleGUIWette != null) {
+            lblAktuelleWette.setText(aktuelleGUIWette.getAnzahl() + "x die " + aktuelleGUIWette.getAugenzahl());
+        }
     
     fuegeSpielverlaufHinzu(ergebnis);
     aktualisiereWuerfelAnzeige();
@@ -425,6 +507,8 @@ private void starteSpiel() {
         sliderAnzahl.setEnabled(false);
     }
     System.out.println(ergebnis);
+    markiereAktivenSpieler(gameController.getSpielerAmZugIndex());
+    zeigeBotZuegeMitRahmen(ergebnis);
 }
     
     private void btnWetteAnzweifelnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWetteAnzweifelnActionPerformed
@@ -462,6 +546,7 @@ private void starteSpiel() {
     }
 
     System.out.println(ergebnis);
+    markiereAktivenSpieler(gameController.getSpielerAmZugIndex());
     }//GEN-LAST:event_btnWetteAnzweifelnActionPerformed
 
     private void btnWetteErhoehenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWetteErhoehenActionPerformed

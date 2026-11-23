@@ -19,6 +19,7 @@ public class GameController {
     private int spielerAmZugIndex = -1;
     private Spieler aktuellerWettsteller;
     private boolean rundeBeendet = false;
+    
 
     public GameController(List<Spieler> spielerListe) {
 
@@ -57,6 +58,13 @@ public class GameController {
                     i == 1
             );
         }
+    }
+    
+    public int getSpielerAmZugIndex() {//test
+    if (rundeBeendet) {
+        return -1;
+    }
+        return spielerAmZugIndex;
     }
 
     // Alle Spieler würfeln
@@ -380,7 +388,7 @@ public boolean spielerErhoehtWette(Wette neueWette) {
 }
 
 //Menschlicher Spieler zweifelt an
- 
+
 public String spielerZweifeltAn() {
     if (!istSpielerAmZug() || aktuelleWette == null) {
         return "Du bist gerade nicht am Zug.";

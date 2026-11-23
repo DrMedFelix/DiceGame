@@ -10,6 +10,16 @@ public class UserVerwaltung {
 
     private static UserVerwaltung instance;
 
+    private User aktiverUser;
+    
+    public void setAktiverUser(User aktiverUser) {
+        this.aktiverUser = aktiverUser;
+    }
+
+    public User getAktiverUser() {
+        return aktiverUser;
+    }
+    
     public static UserVerwaltung getInstance() {
         if (instance == null) {
             instance = new UserVerwaltung();

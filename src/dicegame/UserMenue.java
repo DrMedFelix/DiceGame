@@ -203,7 +203,7 @@ public class UserMenue extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     String ausgewaehlterName = (String) jComboBox1.getSelectedItem();
-
+    
         if (ausgewaehlterName == null || ausgewaehlterName.equals("-- Keine Spieler vorhanden --")) {
             JOptionPane.showMessageDialog(this, 
                 "Bitte wähle einen gültigen Spieler aus oder erstelle einen neuen!", 
@@ -214,7 +214,8 @@ public class UserMenue extends javax.swing.JInternalFrame {
 
         User spieler = verwaltung.sucheUser(ausgewaehlterName);
 
-        if (spieler != null) {        
+        if (spieler != null) {  
+            verwaltung.setAktiverUser(spieler);
             JOptionPane.showMessageDialog(this, 
                 "Spiel wird gestartet für: " + spieler.getName(), 
                 "Start", 
