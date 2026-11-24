@@ -204,6 +204,8 @@ private void markiereAktivenSpieler(int aktiverIndex) {
         txtSpielverlauf = new javax.swing.JTextArea();
         sliderAugenzahl = new javax.swing.JSlider();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 600));
@@ -291,104 +293,111 @@ private void markiereAktivenSpieler(int aktiverIndex) {
         sliderAugenzahl.setMinimum(1);
         sliderAugenzahl.setPaintLabels(true);
         sliderAugenzahl.setPaintTicks(true);
+        sliderAugenzahl.setValue(1);
 
         jLabel4.setText("Spieler");
+
+        jLabel5.setText("Würfelanzahl");
+
+        jLabel6.setText("Augenzahl");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel2)
+                        .addComponent(btnWetteAbschicken)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnWetteAnzweifeln)
                         .addGap(18, 18, 18)
-                        .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(142, 142, 142)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblAktuelleWette)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
-                                .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblStatus)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(btnWetteErhoehen))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(392, 392, 392)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelBot2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(38, 38, 38)))
-                        .addGap(72, 72, 72)))
-                .addContainerGap(116, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(330, 330, 330)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sliderAnzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(sliderAnzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sliderAugenzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnWetteAbschicken)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnWetteAnzweifeln)
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnWetteErhoehen)))))
+                                .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(100, 100, 100)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblAktuelleWette)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel3))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblStatus))
+                                        .addGap(0, 166, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sliderAugenzahl, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(392, 392, 392)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(panelBot2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(172, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(331, 331, 331))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(275, 275, 275))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(341, 341, 341))))
+                        .addGap(364, 364, 364))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelBot2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(lblAktuelleWette))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(234, 234, 234)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel3)))
+                            .addGap(250, 250, 250)
+                            .addComponent(jLabel2))
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(227, 227, 227)
-                            .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(243, 243, 243)
-                        .addComponent(panelBot3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)))
+                            .addGap(243, 243, 243)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(panelBot3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(panelBot1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelBot2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 52, 52)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(lblAktuelleWette)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblStatus)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(84, 84, 84)
+                        .addGap(78, 78, 78)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(panelSpieler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(134, 134, 134)
+                        .addGap(112, 112, 112)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sliderAnzahl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sliderAugenzahl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -495,6 +504,9 @@ private void markiereAktivenSpieler(int aktiverIndex) {
         btnWetteAnzweifeln.setEnabled(false);
         sliderAugenzahl.setEnabled(false);
         sliderAnzahl.setEnabled(false);
+        zeigeSpielEndePopup();
+        zeigeNachSpielOptionen();
+        return;
     } else if (gameController.istSpielerAmZug()) {
         sliderAugenzahl.setEnabled(true);
         sliderAnzahl.setEnabled(true);
@@ -536,6 +548,9 @@ private void markiereAktivenSpieler(int aktiverIndex) {
         btnWetteAnzweifeln.setEnabled(false);
         sliderAugenzahl.setEnabled(false);
         sliderAnzahl.setEnabled(false);
+        zeigeSpielEndePopup();
+        zeigeNachSpielOptionen();
+        return;
     } else if (gameController.istSpielerAmZug()) {
         sliderAugenzahl.setEnabled(true);
         sliderAnzahl.setEnabled(true);
@@ -582,6 +597,74 @@ private void markiereAktivenSpieler(int aktiverIndex) {
             txtSpielverlauf.getDocument().getLength()
     );
 }
+    
+    private void zeigeSpielEndePopup() {
+    if (botTimer != null && botTimer.isRunning()) {
+        botTimer.stop();
+    }
+    markiereAktivenSpieler(-1);
+
+    boolean spielerHatGewonnen = spieler[0].getWuerfelAnzahl() > 0;
+
+    String nachricht = spielerHatGewonnen
+            ? "Du hast das Spiel gewonnen!"
+            : "Du hast alle Würfel verloren und das Spiel verloren.";
+    String titel = spielerHatGewonnen ? "Gewonnen!" : "Verloren!";
+    int typ = spielerHatGewonnen
+            ? javax.swing.JOptionPane.INFORMATION_MESSAGE
+            : javax.swing.JOptionPane.WARNING_MESSAGE;
+
+    javax.swing.JOptionPane.showMessageDialog(this, nachricht, titel, typ);
+}
+
+private void zeigeNachSpielOptionen() {
+    String[] optionen = {"Neues Spiel starten", "Ins Hauptmenü gehen"};
+
+    int auswahl = javax.swing.JOptionPane.showOptionDialog(
+            this,
+            "Auswahl?",
+            "Auswahl?",
+            javax.swing.JOptionPane.DEFAULT_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE,
+            null,
+            optionen,
+            optionen[0]
+    );
+
+    if (auswahl == 0) {
+        neuesSpielStarten();
+    } else {
+        zurueckInsHauptmenue();
+    }
+}
+
+private void neuesSpielStarten() {
+    for (int i = 0; i < spieler.length; i++) {
+        if (i == 0 && spieler[0] != null) {
+            spieler[0].setWuerfelAnzahl(GameController.WUERFEL_PRO_SPIELER);
+        } else {
+            spieler[i] = new Bot();
+        }
+    }
+    starteSpiel();
+}
+
+private void zurueckInsHauptmenue() {
+    if (botTimer != null && botTimer.isRunning()) {
+        botTimer.stop();
+    }
+    if (spieler[0] != null) {
+        spieler[0].setWuerfelAnzahl(GameController.WUERFEL_PRO_SPIELER);
+    }
+    HauptMenue menue = new HauptMenue();
+    menue.setVisible(true);
+
+    HauptMenue naechstesFenster = new HauptMenue(hauptFenster); 
+    if (hauptFenster != null) {
+        hauptFenster.zeigeNaechstesFenster(this, naechstesFenster);
+    }       
+}
+
     /**
      * @param args the command line arguments
      */
@@ -615,6 +698,8 @@ private void markiereAktivenSpieler(int aktiverIndex) {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAktuelleWette;
     private javax.swing.JLabel lblStatus;
