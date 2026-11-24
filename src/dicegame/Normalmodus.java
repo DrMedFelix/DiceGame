@@ -260,6 +260,7 @@ private void markiereAktivenSpieler(int aktiverIndex) {
 
         sliderAnzahl.setMajorTickSpacing(5);
         sliderAnzahl.setMaximum(20);
+        sliderAnzahl.setMinimum(1);
         sliderAnzahl.setMinorTickSpacing(1);
         sliderAnzahl.setPaintLabels(true);
         sliderAnzahl.setPaintTicks(true);
