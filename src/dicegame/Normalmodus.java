@@ -464,6 +464,7 @@ private void markiereAktivenSpieler(int aktiverIndex) {
             felder[i][j].setEditable(false);
             felder[i][j].setHorizontalAlignment(javax.swing.JTextField.CENTER);
             felder[i][j].setText(String.valueOf(wuerfe.get(j)));
+            felder[i][j].setText("?");
             panels[i].add(felder[i][j]);
         }
         panels[i].revalidate();
