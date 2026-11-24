@@ -465,6 +465,7 @@ private void markiereAktivenSpieler(int aktiverIndex) {
         int augenzahl = sliderAugenzahl.getValue();
         int anzahl = sliderAnzahl.getValue();
         Wette neueWette = new Wette(augenzahl, anzahl);
+        boolean warEroeffnung = gameController.getAktuelleWette() == null;
         boolean erfolgreich = gameController.spielerErhoehtWette(neueWette);
         if (!erfolgreich) {
             fuegeSpielverlaufHinzu("Die Wette ist ungültig oder nicht hoch genug!");
@@ -475,7 +476,10 @@ private void markiereAktivenSpieler(int aktiverIndex) {
         btnWetteAnzweifeln.setEnabled(false);
         sliderAugenzahl.setEnabled(false);
         sliderAnzahl.setEnabled(false);
-        String ergebnis = gameController.verarbeiteBotZuegeBisSpieler();
+        // Eigene Wette als erste Zeile in die Meldungen schreiben
+        String eigeneWette = (warEroeffnung ? "Du eröffnest mit " : "Du erhöhst auf ")
+                + anzahl + "x die " + augenzahl + "\n";
+        String ergebnis = eigeneWette + gameController.verarbeiteBotZuegeBisSpieler();
         aktuelleGUIWette = gameController.getAktuelleWette();
         if (aktuelleGUIWette != null) {
             lblAktuelleWette.setText(aktuelleGUIWette.getAnzahl() + "x die " + aktuelleGUIWette.getAugenzahl());
@@ -513,6 +517,7 @@ private void markiereAktivenSpieler(int aktiverIndex) {
     markiereAktivenSpieler(gameController.getSpielerAmZugIndex());
     zeigeBotZuegeMitRahmen(ergebnis);
 }
+
     
     private void btnWetteAnzweifelnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWetteAnzweifelnActionPerformed
     String ergebnis = gameController.spielerZweifeltAn();
